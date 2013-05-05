@@ -147,6 +147,18 @@ class Point(object):
                          self.y-v_or_p.y,
                          self.z-v_or_p.z)
 
+    def __mul__(self, f):
+        """Overload the multiplication operator."""
+        return Point(self.x * f,
+                     self.y * f,
+                     self.z * f)
+    
+    def __rmul__(self, f):
+        """Overload the right multiplication operator."""
+        return Point(self.x * f,
+                     self.y * f,
+                     self.z * f)
+    
     def __str__(self):
         """Return a string describing the point."""
         return '(' + str(self.x) + ',' + str(self.y) + ',' + str(self.z) + ')'
