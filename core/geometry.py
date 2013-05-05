@@ -288,3 +288,29 @@ def face_forward(n, v):
         return -n
     else:
         return n
+
+
+class Ray(object):
+
+    """Class hodling a 3D Ray."""
+
+    def __init__(self, origin=None, direction=None, start=0.0, end=float('inf'), time=0.0, depth=0):
+        """Constructor for a 3D Ray."""
+        if origin:
+            self.o = origin
+        else:
+            self.o = Point(0,0,0)
+        if direction:
+            self.d = direction
+        else:
+            self.d = Vector(0,0,0)
+
+        # the following are used to constrain the ray to a segment
+        self.mint = start
+        self.maxt = end
+        
+        # time at which this ray is evaluated
+        self.time = time
+        
+        # number of bounces this ray went through
+        self.depth = depth
