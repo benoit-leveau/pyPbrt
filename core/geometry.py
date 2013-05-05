@@ -13,6 +13,11 @@ class Vector(object):
         self.y = float(y)
         self.z = float(z)
 
+    @classmethod
+    def from_normal(cls, n):
+        """Construct a Vector from a Normal."""
+        return cls(n.x, n.y, n.z)
+    
     def length_squared(self):
         """Return the square value of the length of the vector."""
         return self.x*self.x + self.y*self.y + self.z*self.z
