@@ -50,6 +50,14 @@ class Vector(object):
                       self.y * inv,
                       self.z * inv)
 
+    def __eq__(self, v):
+        """Overload the comparison operator."""
+        return self.x == v.x and self.y == v.y and self.z == v.z
+
+    def __ne__(self, v):
+        """Overload the comparison operator."""
+        return self.x != v.x or self.y != v.y or self.z != v.z
+
     def __getitem__(self, index):
         """Overload the bracket operator.
             
