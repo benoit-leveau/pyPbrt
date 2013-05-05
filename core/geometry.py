@@ -130,11 +130,11 @@ class Point(object):
         self.y = float(y)
         self.z = float(z)
 
-    def __add__(self, v):
-        """Return a point translated by the supplied vector."""
-        return Point(self.x+v.x,
-                     self.y+v.y,
-                     self.z+v.z)
+    def __add__(self, v_or_p):
+        """Return a point translated by the supplied vector, or a sum of two points."""
+        return Point(self.x+v_or_p.x,
+                     self.y+v_or_p.y,
+                     self.z+v_or_p.z)
 
     def __sub__(self, v_or_p):
         """Return a point translated by the supplied vector, or a vector if supplied with a point."""
