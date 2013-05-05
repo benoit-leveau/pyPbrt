@@ -82,7 +82,7 @@ class Vector(object):
 
     def __str__(self):
         """Return a string describing the vector."""
-        return '(' + str(self.x) + ',' + str(self.y) + ',' + str(self.z) + ')'
+        return "Vector " + '(' + str(self.x) + ',' + str(self.y) + ',' + str(self.z) + ')'
 
 
 def dot(v1, v2):
@@ -174,7 +174,7 @@ class Point(object):
     
     def __str__(self):
         """Return a string describing the point."""
-        return '(' + str(self.x) + ',' + str(self.y) + ',' + str(self.z) + ')'
+        return "Point " + '(' + str(self.x) + ',' + str(self.y) + ',' + str(self.z) + ')'
  
 
 def distance(p1, p2):
