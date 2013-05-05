@@ -171,6 +171,14 @@ class Point(object):
         return Point(self.x * f,
                      self.y * f,
                      self.z * f)
+
+    def __eq__(self, p):
+        """Overload the comparison operator."""
+        return self.x == p.x and self.y == p.y and self.z == p.z
+    
+    def __ne__(self, p):
+        """Overload the comparison operator."""
+        return self.x != p.x or self.y != p.y or self.z != p.z
     
     def __str__(self):
         """Return a string describing the point."""
