@@ -1,7 +1,7 @@
 import unittest
 import math
 
-from core.geometry import Vector, Point, Normal, Ray
+from core.geometry import Vector, Point, Normal, Ray, RayDifferential
 from core.geometry import face_forward
 
 class TestGeometry(unittest.TestCase):
@@ -50,10 +50,36 @@ class TestGeometry(unittest.TestCase):
         self.assertEqual(face_forward(n, v), -n)
     
     def test_ray(self):
-        # test operator()
         r = Ray(Point(0, 0, 0), Vector(1, 2, 3))
-        p = r(1.7)        
-        self.assertEqual(p, Point(1.7, 3.4, 5.1))
         
+        # test copy constructor
+        r2 = Ray.from_ray(r)
+        self.assertEqual(r2.d, r.d)
+
+        # test constructor from parent ray
+        r3 = Ray.from_ray_parent(r.o, r.d, r, r.mint)
+        self.assertEqual(r3.depth, r.depth+1)
+
+        # test operator()
+        p = r(1.7)        
+        self.assertEqual(p, Point(1.7, 3.4, 5.1))        
+
+    def test_ray_differential(self):
+        r = Ray(Point(0, 0, 0), Vector(1, 2, 3))
+        rd = RayDifferential(Point(0, 0, 0), Vector(1, 2, 3))
+        
+        # test copy constructor from Ray
+        rd2 = RayDifferential.from_ray(r)
+        self.assertEqual(rd2.d, r.d)
+        self.assertEqual(rd2.has_differentials, False)
+
+        # test constructor from parent ray
+        rd3 = RayDifferential.from_ray_parent(r.o, r.d, r, r.mint)
+        self.assertEqual(rd3.depth, r.depth+1)
+
+        # test operator()
+        p = rd(1.7)        
+        self.assertEqual(p, Point(1.7, 3.4, 5.1))
+
 if __name__ == '__main__':
     unittest.main()
