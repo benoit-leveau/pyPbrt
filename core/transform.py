@@ -2,7 +2,7 @@
 
 import math
 
-from core.geometry import Vector
+from core.geometry import Point, Vector
 from core.geometry import normalize, cross
 
 
@@ -88,6 +88,23 @@ class Transform(object):
     def __ne__(self, t):
         """Overload the comparison operator."""
         return self.m != t.m or self.m_inv != t.m_inv
+    
+    def __call__(self, p_or_v):
+        """Override the operator()."""
+        if isinstance(p_or_v, Point):
+            x = p_or_v.x
+            y = p_or_v.y
+            z = p_or_v.z
+            xp = self.m.m[0][0]*x + self.m.m[0][1]*y + self.m.m[0][2]*z + self.m.m[0][3]
+            yp = self.m.m[1][0]*x + self.m.m[1][1]*y + self.m.m[1][2]*z + self.m.m[1][3]
+            zp = self.m.m[2][0]*x + self.m.m[2][1]*y + self.m.m[2][2]*z + self.m.m[2][3]
+            wp = self.m.m[3][0]*x + self.m.m[3][1]*y + self.m.m[3][2]*z + self.m.m[3][3]
+            if wp == 1.0:
+                return Point(xp, yp, zp)
+            else:
+                return Point(xp, yp, zp)/wp
+        elif isinstance(p_or_v, Vector):
+            pass
     
     def __str__(self):
         """Return a string describing the transform."""
