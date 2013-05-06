@@ -10,3 +10,8 @@ def round_up_pow_2(v):
     v |= v >> 8
     v |= v >> 16
     return v+1
+
+
+def lerp(t, v1, v2):
+    """Linear Interpolation between v1 and v2."""
+    return (1.0-t)*v1 + t*v2
