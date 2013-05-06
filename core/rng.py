@@ -29,3 +29,6 @@ class RNG(object):
         """Generate a random unsigned integer."""
         pass
     
+    def __str__(self):
+        """Return a string describing the pnrg."""
+        return "RNG (state=%s)" % str(self.mt)
