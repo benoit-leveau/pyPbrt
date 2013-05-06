@@ -2,7 +2,7 @@
 
 import math
 
-from core.geometry import Point, Vector
+from core.geometry import Point, Vector, Normal, Ray, RayDifferential
 from core.geometry import normalize, cross
 
 
@@ -89,12 +89,12 @@ class Transform(object):
         """Overload the comparison operator."""
         return self.m != t.m or self.m_inv != t.m_inv
     
-    def __call__(self, p_or_v):
+    def __call__(self, elt):
         """Override the operator()."""
-        if isinstance(p_or_v, Point):
-            x = p_or_v.x
-            y = p_or_v.y
-            z = p_or_v.z
+        if isinstance(elt, Point):
+            x = elt.x
+            y = elt.y
+            z = elt.z
             xp = self.m.m[0][0]*x + self.m.m[0][1]*y + self.m.m[0][2]*z + self.m.m[0][3]
             yp = self.m.m[1][0]*x + self.m.m[1][1]*y + self.m.m[1][2]*z + self.m.m[1][3]
             zp = self.m.m[2][0]*x + self.m.m[2][1]*y + self.m.m[2][2]*z + self.m.m[2][3]
@@ -103,15 +103,36 @@ class Transform(object):
                 return Point(xp, yp, zp)
             else:
                 return Point(xp, yp, zp)/wp
-        elif isinstance(p_or_v, Vector):
-            x = p_or_v.x
-            y = p_or_v.y
-            z = p_or_v.z
+        elif isinstance(elt, Vector):
+            x = elt.x
+            y = elt.y
+            z = elt.z
             xp = self.m.m[0][0]*x + self.m.m[0][1]*y + self.m.m[0][2]*z
             yp = self.m.m[1][0]*x + self.m.m[1][1]*y + self.m.m[1][2]*z
             zp = self.m.m[2][0]*x + self.m.m[2][1]*y + self.m.m[2][2]*z
             return Vector(xp, yp, zp)
-    
+        elif isinstance(elt, Normal):
+            x = elt.x
+            y = elt.y
+            z = elt.z
+            return Normal(self.m_inv.m[0][0]*x + self.m_inv.m[1][0]*y + self.m_inv.m[2][0]*z,
+                          self.m_inv.m[0][1]*x + self.m_inv.m[1][1]*y + self.m_inv.m[2][1]*z,
+                          self.m_inv.m[0][2]*x + self.m_inv.m[1][2]*y + self.m_inv.m[2][2]*z)
+        elif isinstance(elt, RayDifferential):
+            ray = RayDifferential.from_ray_differential(elt)
+            ray.o = self(ray.o)
+            ray.d = self(ray.d)
+            ray.rx_origin = self(ray.rx_origin)
+            ray.ry_origin = self(ray.ry_origin)
+            ray.rx_direction = self(ray.rx_direction)
+            ray.ry_direction = self(ray.ry_direction)
+            return ray
+        elif isinstance(elt, Ray):
+            ray = Ray.from_ray(elt)
+            ray.o = self(ray.o)
+            ray.d = self(ray.d)
+            return ray
+
     def __str__(self):
         """Return a string describing the transform."""
         return "Transform (m='%s', m_inv='%s')" % (str(self.m), str(self.m_inv))
