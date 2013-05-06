@@ -295,7 +295,7 @@ class Normal(object):
             raise IndexError("list index out of range")
     
     def __str__(self):
-        """Return a string describing the vector."""
+        """Return a string describing the normal."""
         return "Normal " + '(' + str(self.x) + ',' + str(self.y) + ',' + str(self.z) + ')'
 
 
