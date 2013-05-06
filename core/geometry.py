@@ -488,7 +488,12 @@ class BBox(object):
         """Pad the bounding box by a constant factor."""
         self.pMin -= Vector(delta, delta, delta)
         self.pMax += Vector(delta, delta, delta)
-    
+
+    def __str__(self):
+        """Return a string describing the bbox."""
+        return "BBox (min='%s', max='%s')" % (str(self.pMin), str(self.pMax))
+
+
 def union(b, b_or_p):
     """Return the union of a BBox and a Point/BBox."""
     ret = BBox()
