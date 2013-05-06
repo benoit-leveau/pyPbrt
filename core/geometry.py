@@ -179,6 +179,23 @@ class Point(object):
     def __ne__(self, p):
         """Overload the comparison operator."""
         return self.x != p.x or self.y != p.y or self.z != p.z
+
+    def __getitem__(self, index):
+        """Overload the bracket operator.
+            
+        Example:
+            v1[0] will return v1.x
+            similarly for v1[1] and v1.y, v1[2] and v1.z
+        
+        """
+        if index == 0:
+            return self.x
+        elif index == 1:
+            return self.y
+        elif index == 2:
+            return self.z
+        else:
+            raise IndexError("list index out of range")
     
     def __str__(self):
         """Return a string describing the point."""
