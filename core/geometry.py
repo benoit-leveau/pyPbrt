@@ -331,3 +331,43 @@ class Ray(object):
         
         # number of bounces this ray went through
         self.depth = depth
+
+    @classmethod
+    def from_ray(cls, ray):
+        """Copy constructor for Ray."""
+        return cls(origin=ray.o,
+                   direction=ray.d,
+                   start=ray.mint,
+                   end=ray.maxt,
+                   time=ray.time,
+                   depth=ray.depth
+                   )
+        
+    @classmethod
+    def from_ray_parent(cls, origin, direction, parent, start, end=float('inf')):
+        """Construct a (spawned) Ray from a parent Ray."""
+        return cls(origin=origin,
+                   direction=direction,
+                   start=start,
+                   end=end,
+                   time=parent.time,
+                   depth=parent.depth+1 # increment depth
+                   )
+
+    def __call__(self, t):
+        """Override the operator().
+
+        >>> r = Ray(Point(0, 0, 0), Vector(1, 2, 3))
+        >>> p = r(1.7)
+
+        """
+        return self.o + self.d * t
+
+    def __str__(self):
+        """Return a string describing the ray."""
+        return "Ray ( %s, %s, [%f-%f], %f, %d )" % (
+            self.o, self.d,
+            self.mint, self.maxt,
+            self.time, self.depth
+            )
+
