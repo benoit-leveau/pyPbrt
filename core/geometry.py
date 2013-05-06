@@ -5,7 +5,7 @@ import math
 
 class Vector(object):
     
-    """Class holding a 3D vector."""
+    """Class describing a 3D vector."""
     
     def __init__(self, x=0.0, y=0.0, z=0.0):
         """Construct a Vector instance."""
@@ -224,7 +224,7 @@ def distance_squared(p1, p2):
 
 class Normal(object):
     
-    """Class holding a 3D Normal."""
+    """Class describing a 3D Normal."""
     
     def __init__(self, x=0.0, y=0.0, z=0.0):
         """Construct a Normal instance."""
@@ -319,7 +319,7 @@ def face_forward(n, v):
 
 class Ray(object):
 
-    """Class hodling a 3D Ray."""
+    """Class describing a 3D Ray."""
 
     def __init__(self, origin=None, direction=None, start=0.0, end=float('inf'), time=0.0, depth=0):
         """Constructor for a 3D Ray."""
@@ -384,7 +384,7 @@ class Ray(object):
 
 class RayDifferential(Ray):
 
-    """Class hodling a 3D Ray Differential (adding dx & dy rays to Ray)."""
+    """Class describing a 3D Ray Differential (adding dx & dy rays to Ray)."""
 
     def __init__(self, origin=None, direction=None, start=0.0, end=float('inf'), time=0.0, depth=0):
         """Constructor for a 3D RayDifferential."""
