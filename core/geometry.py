@@ -88,7 +88,7 @@ class Vector(object):
 
     def __str__(self):
         """Return a string describing the vector."""
-        return "Vector " + '(' + str(self.x) + ',' + str(self.y) + ',' + str(self.z) + ')'
+        return "Vector (%f, %f, %f)" % (self.x, self.y, self.z)
 
 
 def dot(v1, v2):
@@ -214,7 +214,7 @@ class Point(object):
     
     def __str__(self):
         """Return a string describing the point."""
-        return "Point " + '(' + str(self.x) + ',' + str(self.y) + ',' + str(self.z) + ')'
+        return "Point (%f, %f, %f)" % (self.x, self.y, self.z)
  
 
 def distance(p1, p2):
@@ -310,8 +310,7 @@ class Normal(object):
     
     def __str__(self):
         """Return a string describing the normal."""
-        return "Normal " + '(' + str(self.x) + ',' + str(self.y) + ',' + str(self.z) + ')'
-
+        return "Normal (%f, %f, %f)" % (self.x, self.y, self.z)
 
 def face_forward(n, v):
     """Return the supplied normal flipped to the same hemisphere as v.""" 
