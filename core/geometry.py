@@ -14,6 +14,13 @@ class Vector(object):
         self.z = float(z)
 
     @classmethod
+    def from_vector(self, v):
+        """Copy constructor."""
+        self.x = v.x
+        self.y = v.y
+        self.z = v.z
+    
+    @classmethod
     def from_normal(cls, n):
         """Construct a Vector from a Normal."""
         return cls(n.x, n.y, n.z)
@@ -142,6 +149,13 @@ class Point(object):
         self.x = float(x)
         self.y = float(y)
         self.z = float(z)
+
+    @classmethod
+    def from_point(self, p):
+        """Copy constructor."""
+        self.x = p.x
+        self.y = p.y
+        self.z = p.z
 
     def __add__(self, v_or_p):
         """Return a point translated by the supplied vector, or a sum of two points."""
