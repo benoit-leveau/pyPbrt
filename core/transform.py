@@ -2,7 +2,8 @@
 
 import math
 
-from core.geometry import Vector, normalize
+from core.geometry import Vector
+from core.geometry import normalize, cross
 
 
 class Matrix4x4(object):
@@ -174,3 +175,42 @@ def rotate(angle, axis):
                     0.0,
                     1.0)
     return Transform(mat, transpose(mat))
+
+
+def look_at(pos, look, up):
+    """Construct a Transform corresponding to a viewpoint in world space."""
+    cam_to_world = Matrix4x4()
+    
+    # initialize fourth column of the viewing matrix
+    cam_to_world.m[0][3] = pos.x
+    cam_to_world.m[1][3] = pos.y
+    cam_to_world.m[2][3] = pos.z
+    cam_to_world.m[3][3] = 1.0
+
+    # construct the base
+    dir = normalize(look-pos)
+    left = normalize(cross(normalize(up), dir))
+    new_up = cross(dir, left)
+    
+    # fill the other columns
+    cam_to_world.m[0][0] = left.x
+    cam_to_world.m[1][0] = left.y
+    cam_to_world.m[2][0] = left.z
+    cam_to_world.m[3][0] = 0.0
+    cam_to_world.m[0][1] = new_up.x
+    cam_to_world.m[1][1] = new_up.y
+    cam_to_world.m[2][1] = new_up.z
+    cam_to_world.m[3][1] = 0.0
+    cam_to_world.m[0][2] = dir.x
+    cam_to_world.m[1][2] = dir.y
+    cam_to_world.m[2][2] = dir.z
+    cam_to_world.m[3][2] = 0.0
+
+    return Transform(inverse(cam_to_world), cam_to_world)
+
+
+def inverse(m):
+    """Return the inverse of matrix m."""
+    # dummy implementation for now
+    return m
+
