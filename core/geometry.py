@@ -84,8 +84,7 @@ class Vector(object):
             return self.y
         elif index == 2:
             return self.z
-        else:
-            raise IndexError("list index out of range")
+        raise IndexError("list index out of range")
 
     def __str__(self):
         """Return a string describing the vector."""
@@ -125,6 +124,11 @@ def cross(v1, v2):
     return Vector((v1.y * v2.z) - (v1.z * v2.y),
                   (v1.z * v2.x) - (v1.x * v2.z),
                   (v1.x * v2.y) - (v1.y * v2.x))
+
+
+def normalize(v):
+    """Return a the normalized vector of v."""
+    return v/v.length()
 
 
 def coordinate_system(v):
@@ -206,8 +210,7 @@ class Point(object):
             return self.y
         elif index == 2:
             return self.z
-        else:
-            raise IndexError("list index out of range")
+        raise IndexError("list index out of range")
     
     def __str__(self):
         """Return a string describing the point."""
@@ -303,8 +306,7 @@ class Normal(object):
             return self.y
         elif index == 2:
             return self.z
-        else:
-            raise IndexError("list index out of range")
+        raise IndexError("list index out of range")
     
     def __str__(self):
         """Return a string describing the normal."""
