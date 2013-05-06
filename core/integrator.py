@@ -1,17 +1,23 @@
 """Interface Classes for Integrators."""
 
 
+from abc import ABCMeta, abstractmethod
+
 from core.geometry import abs_dot
 from core.reflection import BSDFSample
 
 
 class Integrator(object):
-
+    
     """Interface for Integrator Classes."""
 
+    __metaclass__ = ABCMeta
+    
+    @abstractmethod
     def preprocess(self):
         pass
 
+    @abstractmethod
     def request_samples(self):
         pass
 
@@ -20,6 +26,7 @@ class SurfaceIntegrator(Integrator):
 
     """SurfaceIntegrator Interface."""
 
+    @abstractmethod
     def Li(self, scene, renderer, ray, isect, sample, rng):
         pass
 

@@ -1,12 +1,15 @@
 """Renderer Class."""
 
+
 from abc import ABCMeta, abstractmethod
 
 
-class Renderer(metaclass=ABCMeta):
+class Renderer(object):
 
     """Renderer Interface."""
 
+    __metaclass__ = ABCMeta
+    
     def __init__(self):
         """Default constructor."""
         pass
