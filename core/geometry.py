@@ -398,6 +398,21 @@ class RayDifferential(Ray):
         self.rx_direction = Vector()
         self.ry_direction = Vector()
 
+    @classmethod
+    def from_ray_differential(cls, ray):
+        """Copy constructor."""
+        ret = cls(origin=ray.o,
+                  direction=ray.d,
+                  start=ray.mint,
+                  end=ray.maxt,
+                  time=ray.time,
+                  depth=ray.depth)
+        ret.has_differentials = ray.has_differentials
+        ret.rx_origin = ray.rx_origin
+        ret.ry_origin = ray.ry_origin
+        ret.rx_direction = ray.rx_direction
+        ret.ry_direction = ray.ry_direction
+        return ret
 
     @classmethod
     def from_ray_parent(cls, origin, direction, parent, start, end=float('inf')):
@@ -419,7 +434,6 @@ class RayDifferential(Ray):
                    time=ray.time,
                    depth=ray.depth)
     
-
     def scale_differentials(self, s):
         """Scale the differentials rays to accomodate for different ray spacings."""
         self.rx_origin = self.o + (self.rx_origin - self.o) * s
