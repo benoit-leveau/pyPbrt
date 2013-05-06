@@ -393,10 +393,11 @@ class RayDifferential(Ray):
         """Constructor for a 3D RayDifferential."""
         super(RayDifferential, self).__init__(origin, direction, start, end, time, depth)
         self.has_differentials = False
-        self.rxOrigin = Point()
-        self.ryOrigin = Point()
-        self.rxDirection = Vector()
-        self.ryDirection = Vector()
+        self.rx_origin = Point()
+        self.ry_origin = Point()
+        self.rx_direction = Vector()
+        self.ry_direction = Vector()
+
 
     @classmethod
     def from_ray_parent(cls, origin, direction, parent, start, end=float('inf')):
@@ -417,13 +418,14 @@ class RayDifferential(Ray):
                    end=ray.maxt,
                    time=ray.time,
                    depth=ray.depth)
+    
 
     def scale_differentials(self, s):
         """Scale the differentials rays to accomodate for different ray spacings."""
-        self.rxOrigin = self.o + (self.rxOrigin - self.o) * s
-        self.ryOrigin = self.o + (self.ryOrigin - self.o) * s
-        self.rxDirection = self.d + (self.rxDirection - self.d) * s
-        self.ryDirection = self.d + (self.ryDirection - self.d) * s
+        self.rx_origin = self.o + (self.rx_origin - self.o) * s
+        self.ry_origin = self.o + (self.ry_origin - self.o) * s
+        self.rx_direction = self.d + (self.rx_direction - self.d) * s
+        self.ry_direction = self.d + (self.ry_direction - self.d) * s
         
     def __str__(self):
         """Return a string describing the ray differential."""
