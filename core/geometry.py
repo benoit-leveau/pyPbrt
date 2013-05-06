@@ -2,6 +2,8 @@
 
 import math
 
+from core.pbrt import lerp
+
 
 class Vector(object):
     
@@ -488,6 +490,60 @@ class BBox(object):
         """Pad the bounding box by a constant factor."""
         self.pMin -= Vector(delta, delta, delta)
         self.pMax += Vector(delta, delta, delta)
+
+    def surface_area(self):
+        """Compute the surface area of the six faces of the box."""
+        d = self.pMax - self.pMin
+        return 2.0 * (d.x*d.y + d.x*d.z + d.y*d.z)
+    
+    def volume(self):
+        """Compute the volume of the box."""
+        d = self.pMax - self.pMin
+        return d.x*d.y*d.z
+
+    def maximum_extent(self):
+        """Compute the volume of the box."""
+        diag = self.pMax - self.pMin
+        if diag.x>diag.y and diag.y>diag.z:
+            return 0
+        elif diag.y>diag.z:
+            return 1
+        else:
+            return 2
+    
+    def lerp(self, tx, ty, tz):
+        """Linear Interpolation between pMin and pMax."""
+        return Point(lerp(tx, self.pMin.x, self.pMax.x),
+                     lerp(ty, self.pMin.y, self.pMax.y))
+                
+    def offset(self, p):
+        """Return position of a point relative to the corners."""
+        return Vector((p.x - self.pMin.x) / (self.pMax.x - self.pMin.x),
+                      (p.y - self.pMin.y) / (self.pMax.y - self.pMin.y),
+                      (p.z - self.pMin.z) / (self.pMax.z - self.pMin.z))
+
+    def bounding_sphere(self):
+        """Return a sphere containing the entire bounding box."""
+        center = 0.5 * (self.pMin+self.pMax)
+        if self.inside(center):
+            radius = distance(center, self.pMax)
+        else:
+            radius = 0.0
+        return center, radius
+
+    def __getitem__(self, index):
+        """Overload the bracket operator.
+        
+        Example:
+        bbox[0] will return bbox.pMin
+        bbox[1] will return bbox.pMax
+        
+        """
+        if index == 0:
+            return self.pMin
+        elif index == 1:
+            return self.pMax
+        raise IndexError("list index out of range")
 
     def __str__(self):
         """Return a string describing the bbox."""
