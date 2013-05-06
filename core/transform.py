@@ -104,7 +104,13 @@ class Transform(object):
             else:
                 return Point(xp, yp, zp)/wp
         elif isinstance(p_or_v, Vector):
-            pass
+            x = p_or_v.x
+            y = p_or_v.y
+            z = p_or_v.z
+            xp = self.m.m[0][0]*x + self.m.m[0][1]*y + self.m.m[0][2]*z
+            yp = self.m.m[1][0]*x + self.m.m[1][1]*y + self.m.m[1][2]*z
+            zp = self.m.m[2][0]*x + self.m.m[2][1]*y + self.m.m[2][2]*z
+            return Vector(xp, yp, zp)
     
     def __str__(self):
         """Return a string describing the transform."""
