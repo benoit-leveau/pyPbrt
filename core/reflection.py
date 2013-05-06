@@ -10,7 +10,7 @@ class BSDFSample(object):
         self.u_dir = [up0, up1]
         self.u_component = ucomp
 
-    @abstractmethod
+    @classmethod
     def from_rng(cls, rng):
         """Constructs a random sample."""
         return cls(rng.random_float(),
