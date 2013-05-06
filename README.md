@@ -49,6 +49,8 @@ Coding Style
 
 Whenever possible, I tried to adhere to <i>PEP 8 -- Style Guide for Python Code</i> for coding style and to <i>PEP 257 -- Docstring Conventions</i> for docstrings.
 
+Code is checked with the command line tool <i>pep8</i>. More information can be found there https://pypi.python.org/pypi/pep8/
+
 Links:
 * PEP 8: http://www.python.org/dev/peps/pep-0008/
 * PEP 257: http://www.python.org/dev/peps/pep-0257/
