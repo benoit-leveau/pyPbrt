@@ -37,3 +37,7 @@ class RGBSpectrum(CoefficientSpectrum):
         return "RGBSpectrum (r=%f g=%f b=%f)" % (self.c[0],
                                                  self.c[1],
                                                  self.c[2])
+
+
+# default Spectrum is RGBSpectrum
+Spectrum = RGBSpectrum
