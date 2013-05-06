@@ -60,10 +60,12 @@ class TestGeometry(unittest.TestCase):
         
         # test copy constructor
         r2 = Ray.from_ray(r)
+        self.assertTrue(isinstance(r2, Ray))
         self.assertEqual(r2.d, r.d)
 
         # test constructor from parent ray
         r3 = Ray.from_ray_parent(r.o, r.d, r, r.mint)
+        self.assertTrue(isinstance(r3, Ray))
         self.assertEqual(r3.depth, r.depth+1)
 
         # test operator()
@@ -75,12 +77,26 @@ class TestGeometry(unittest.TestCase):
         rd = RayDifferential(Point(0, 0, 0), Vector(1, 2, 3))
         
         # test copy constructor from Ray
+        rd.has_differentials = True
+        rd1 = RayDifferential.from_ray_differential(rd)
+        self.assertTrue(isinstance(rd1, RayDifferential))        
+        self.assertEqual(rd1.o, rd.o)
+        self.assertEqual(rd1.d, rd.d)
+        self.assertEqual(rd1.rx_origin, rd.rx_origin)
+        self.assertEqual(rd1.ry_origin, rd.ry_origin)
+        self.assertEqual(rd1.rx_direction, rd.rx_direction)
+        self.assertEqual(rd1.ry_direction, rd.ry_direction)
+        self.assertEqual(rd1.has_differentials, rd.has_differentials)
+
+        # test copy constructor from Ray
         rd2 = RayDifferential.from_ray(r)
+        self.assertTrue(isinstance(rd2, RayDifferential))
         self.assertEqual(rd2.d, r.d)
         self.assertEqual(rd2.has_differentials, False)
 
         # test constructor from parent ray
         rd3 = RayDifferential.from_ray_parent(r.o, r.d, r, r.mint)
+        self.assertTrue(isinstance(rd3, RayDifferential))
         self.assertEqual(rd3.depth, r.depth+1)
 
         # test operator()
