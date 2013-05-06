@@ -2,7 +2,7 @@
 
 import math
 
-from core.pbrt import lerp
+from core.pbrt import lerp, eq
 
 
 class Vector(object):
@@ -64,11 +64,11 @@ class Vector(object):
 
     def __eq__(self, v):
         """Overload the comparison operator."""
-        return self.x == v.x and self.y == v.y and self.z == v.z
+        return eq(self.x, v.x) and eq(self.y, v.y) and eq(self.z, v.z)
 
     def __ne__(self, v):
         """Overload the comparison operator."""
-        return self.x != v.x or self.y != v.y or self.z != v.z
+        return not eq(self.x, v.x) or not eq(self.y, v.y) or not (self.z, v.z)
 
     def __getitem__(self, index):
         """Overload the bracket operator.
@@ -190,11 +190,11 @@ class Point(object):
 
     def __eq__(self, p):
         """Overload the comparison operator."""
-        return self.x == p.x and self.y == p.y and self.z == p.z
+        return eq(self.x, p.x) and eq(self.y, p.y) and eq(self.z, p.z)
     
     def __ne__(self, p):
         """Overload the comparison operator."""
-        return self.x != p.x or self.y != p.y or self.z != p.z
+        return not eq(self.x, p.x) or not eq(self.y, p.y) or not (self.z, p.z)
 
     def __getitem__(self, index):
         """Overload the bracket operator.
@@ -286,11 +286,11 @@ class Normal(object):
     
     def __eq__(self, n):
         """Overload the comparison operator."""
-        return self.x == n.x and self.y == n.y and self.z == n.z
+        return eq(self.x, n.x) and eq(self.y, n.y) and eq(self.z, n.z)
     
     def __ne__(self, n):
         """Overload the comparison operator."""
-        return self.x != n.x or self.y != n.y or self.z != n.z
+        return not eq(self.x, n.x) or not eq(self.y, n.y) or not (self.z, n.z)
     
     def __getitem__(self, index):
         """Overload the bracket operator.

@@ -15,3 +15,8 @@ def round_up_pow_2(v):
 def lerp(t, v1, v2):
     """Linear Interpolation between v1 and v2."""
     return (1.0-t)*v1 + t*v2
+
+
+def eq(a, b, epsilon=1e-10):
+    """Compares two float values."""
+    return a==b or abs(a-b)<epsilon
