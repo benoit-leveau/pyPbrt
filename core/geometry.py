@@ -316,11 +316,11 @@ class Ray(object):
         if origin:
             self.o = origin
         else:
-            self.o = Point(0,0,0)
+            self.o = Point()
         if direction:
             self.d = direction
         else:
-            self.d = Vector(0,0,0)
+            self.d = Vector()
 
         # the following are used to constrain the ray to a segment
         self.mint = start
