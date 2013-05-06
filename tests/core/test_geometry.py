@@ -3,7 +3,7 @@ import math
 import random
 
 from core.geometry import Vector, Point, Normal, Ray, RayDifferential, BBox
-from core.geometry import face_forward
+from core.geometry import face_forward, union
 
 class TestGeometry(unittest.TestCase):
     
@@ -87,19 +87,80 @@ class TestGeometry(unittest.TestCase):
         p = rd(1.7)        
         self.assertEqual(p, Point(1.7, 3.4, 5.1))
 
-    def test_bounding_box(self):
-        p1 = self.get_random_point()
-        p2 = self.get_random_point()
+    def test_bounding_box_1(self):
+        # test default constructor
+        b = BBox()
+        self.assertEqual(b.pMin,
+                         Point(float('inf'), float('inf'), float('inf')))
+        self.assertEqual(b.pMax,
+                         Point(-float('inf'), -float('inf'), -float('inf')))
 
+    def test_bounding_box_2(self):
         # test constructor from one point
-        b1 = BBox(p1)
+        p = self.get_random_point()
+        b1 = BBox(p)
+        self.assertEqual(b1.pMin, p)
         self.assertEqual(b1.pMin, b1.pMax)
 
+    def test_bounding_box_3(self):
         # test constructor from two points
+        p1 = self.get_random_point()
+        p2 = self.get_random_point()
         b2 = BBox(p1, p2)
         for i in range(3):
             self.assertEqual(b2.pMin[i], min(p1[i], p2[i]))
             self.assertEqual(b2.pMax[i], max(p1[i], p2[i]))
+
+    def test_bounding_box_4(self):
+        # test copy constructor
+        bbox = BBox(Point(5, 5, 5),
+                    Point(7, 7, 7))
+        bbox2 = BBox.from_bbox(bbox)
+        self.assertEqual(bbox.pMin, bbox2.pMin)
+        self.assertEqual(bbox.pMax, bbox2.pMax)
+
+        p1 = Point(6, 5.5, 7)
+        p2 = Point(6, 7.5, 7)
+        p3 = Point(6, 6.5, 4.5)
+        
+        # test methods
+        self.assertEqual(bbox.inside(p1), True)
+        self.assertEqual(bbox.inside(p2), False)
+        self.assertEqual(bbox.inside(p3), False)
+        
+        bbox.expand(1)
+        self.assertEqual(bbox.inside(p1), True)
+        self.assertEqual(bbox.inside(p2), True)
+        self.assertEqual(bbox.inside(p3), True)
+
+    def test_bounding_box_5(self):
+        bbox1 = BBox(Point(0, -2, 0),
+                     Point(1, -1, 1))
+        p1 = Point(-3,3,0.5)
+        bbox2 = union(bbox1, p1)
+        self.assertEqual(bbox2.pMin, Point(-3, -2, 0))
+        self.assertEqual(bbox2.pMax, Point(1, 3, 1))
+
+    def test_bounding_box_6(self):
+        bbox1 = BBox(Point(0, -2, 0),
+                     Point(1, -1, 1))
+        bbox2 = BBox(Point(-2, 0, -2),
+                     Point(-1, 1, -1))
+        bbox3 = union(bbox1, bbox2)
+        self.assertEqual(bbox3.pMin, Point(-2, -2, -2))
+        self.assertEqual(bbox3.pMax, Point(1, 1, 1))
+
+    def test_bounding_box_6(self):
+        bbox1 = BBox(Point(0, 0, 0),
+                     Point(2, 2, 2))
+
+        bbox2 = BBox(Point(2.5, 2.5, 2.5),
+                     Point(3, 3, 3))
+        self.assertEqual(bbox1.overlaps(bbox2), False)
+
+        bbox3 = BBox(Point(-1, -1, -1),
+                     Point(0.5, 0.5, 0.5))
+        self.assertEqual(bbox1.overlaps(bbox3), True)
         
 if __name__ == '__main__':
     unittest.main()
