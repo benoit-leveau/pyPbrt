@@ -24,10 +24,16 @@ Parts of pbrt that are closely tied to the C++ implementation, like the MemoryAr
 A more clever approach, if this project wasn't meant for learning purposes, would be to have a Python bindings to a C++ implementation of pbrt, something that can even be 
 automated with a framework like py++ (http://sourceforge.net/projects/pygccxml/)
 
+Installation
+============
+
+Just cd to the project folder and run <i>pyPbrt</i>.
+Use the flag <i>--help</i> for a description of all available parameters.
+
 Unit Tests
 ==========
 
-Unit tests are implemented using the <i>unittest</i> module.
+Unit tests are implemented using the <i>unittest</i> module and are located in the tests folder.
 For convenience, I use <i>nose</i> to run the tests. More information about nose can be found there: https://pypi.python.org/pypi/nose/1.3.0
 Once nose is installed, running the tests is just a matter of cd'ing to the pyPbrt folder and running:
 <pre>
