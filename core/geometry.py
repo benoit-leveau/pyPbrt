@@ -464,4 +464,46 @@ class BBox(object):
         else:
             self.pMin = Point(float('inf'), float('inf'), float('inf'))
             self.pMax = Point(-float('inf'), -float('inf'), -float('inf'))
-        
+
+    @classmethod
+    def from_bbox(cls, b):
+        """Copy constructor."""
+        return cls(b.pMin, b.pMax)
+
+    def overlaps(self, b):
+        """Return True if overlaps with specified bounding box."""
+        x = (self.pMax.x >= b.pMin.x) and (self.pMin.x <= b.pMax.x)
+        y = (self.pMax.y >= b.pMin.y) and (self.pMin.y <= b.pMax.y)
+        z = (self.pMax.z >= b.pMin.z) and (self.pMin.z <= b.pMax.z)
+        return x and y and z
+
+    def inside(self, pt):
+        """Return True if point is inside the box."""
+        x = (pt.x >= self.pMin.x) and (pt.x <= self.pMax.x)
+        y = (pt.y >= self.pMin.y) and (pt.y <= self.pMax.y)
+        z = (pt.z >= self.pMin.z) and (pt.z <= self.pMax.z)
+        return x and y and z
+
+    def expand(self, delta):
+        """Pad the bounding box by a constant factor."""
+        self.pMin -= Vector(delta, delta, delta)
+        self.pMax += Vector(delta, delta, delta)
+    
+def union(b, b_or_p):
+    """Return the union of a BBox and a Point/BBox."""
+    ret = BBox()
+    if isinstance(b_or_p, Point):
+        ret.pMin.x = min(b.pMin.x, b_or_p.x)
+        ret.pMin.y = min(b.pMin.y, b_or_p.y)
+        ret.pMin.z = min(b.pMin.z, b_or_p.z)
+        ret.pMax.x = max(b.pMax.x, b_or_p.x)
+        ret.pMax.y = max(b.pMax.y, b_or_p.y)
+        ret.pMax.z = max(b.pMax.z, b_or_p.z)
+    else:
+        ret.pMin.x = min(b.pMin.x, b_or_p.pMin.x)
+        ret.pMin.y = min(b.pMin.y, b_or_p.pMin.y)
+        ret.pMin.z = min(b.pMin.z, b_or_p.pMin.z)
+        ret.pMax.x = max(b.pMax.x, b_or_p.pMax.x)
+        ret.pMax.y = max(b.pMax.y, b_or_p.pMax.y)
+        ret.pMax.z = max(b.pMax.z, b_or_p.pMax.z)
+    return ret
