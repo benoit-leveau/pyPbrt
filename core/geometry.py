@@ -434,3 +434,38 @@ class RayDifferential(Ray):
             self.time, self.depth,
             str(self.has_differentials)
             )
+
+
+class BBox(object):
+
+    """Class for Axis-Aligned Bounding Box (AABB)."""
+
+    def __init__(self, p1=None, p2=None):
+        """Construct a BBox with optional points.
+
+        >>> b = BBox(p)
+        >>> b.pMin == b.pMax
+
+        >>> b = BBox(p1, p2)
+        >>> for i in range(3):
+        >>>     b.pMin[i] == min(p1[i], p2[i])
+        >>>     b.pMax[i] == max(p1[i], p2[i])
+
+        """
+        if p1 and p2:
+            self.pMin = Point(min(p1.x, p2.x),
+                              min(p1.y, p2.y),
+                              min(p1.z, p2.z))
+            self.pMax = Point(max(p1.x, p2.x),
+                              max(p1.y, p2.y),
+                              max(p1.z, p2.z))
+        elif p1:
+            self.pMin = Point.from_point(p1)
+            self.pMax = Point.from_point(p1)
+        elif p2:
+            self.pMin = Point.from_point(p2)
+            self.pMax = Point.from_point(p2)
+        else:
+            self.pMin = Point(float('inf'), float('inf'), float('inf'))
+            self.pMax = Point(-float('inf'), -float('inf'), -float('inf'))
+        

@@ -1,7 +1,8 @@
 import unittest
 import math
+import random
 
-from core.geometry import Vector, Point, Normal, Ray, RayDifferential
+from core.geometry import Vector, Point, Normal, Ray, RayDifferential, BBox
 from core.geometry import face_forward
 
 class TestGeometry(unittest.TestCase):
@@ -11,6 +12,11 @@ class TestGeometry(unittest.TestCase):
         self.v2 = Vector(2, 2, 2)
         self.p1 = Point(1, 1, 1)
         self.p2 = Point(2, 2, 2)
+
+    def get_random_point(self):
+        return Point(float(random.randint(0,100)) / 20.0,
+                     float(random.randint(0,100)) / 20.0,
+                     float(random.randint(0,100)) / 20.0)
     
     def test_point(self):
         # operator[]
@@ -81,5 +87,19 @@ class TestGeometry(unittest.TestCase):
         p = rd(1.7)        
         self.assertEqual(p, Point(1.7, 3.4, 5.1))
 
+    def test_bounding_box(self):
+        p1 = self.get_random_point()
+        p2 = self.get_random_point()
+
+        # test constructor from one point
+        b1 = BBox(p1)
+        self.assertEqual(b1.pMin, b1.pMax)
+
+        # test constructor from two points
+        b2 = BBox(p1, p2)
+        for i in range(3):
+            self.assertEqual(b2.pMin[i], min(p1[i], p2[i]))
+            self.assertEqual(b2.pMax[i], max(p1[i], p2[i]))
+        
 if __name__ == '__main__':
     unittest.main()
