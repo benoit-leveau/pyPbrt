@@ -1,6 +1,6 @@
 import unittest
 
-from core.geometry import Point, Vector, Normal, Ray, RayDifferential
+from core.geometry import Point, Vector, Normal, Ray, RayDifferential, BBox
 from core.transform import translate, scale, rotate_x, rotate_y, rotate_z, rotate
 
 
@@ -61,7 +61,18 @@ class TestGeometry(unittest.TestCase):
         self.assertEqual(ray_transformed.rx_direction, Vector(2,3,4))
         self.assertEqual(ray_transformed.ry_direction, Vector(3,4,5))
 
-                        
+    def test_transform_bbox(self):
+        box = BBox(Point(-1, -2, 0), Point(0, 3, -4))
+        box_transformed = translate(Point(10, 20, 30))(box)
+        self.assertTrue(isinstance(box_transformed, BBox))
+        self.assertEqual(box_transformed.pMin, Point(9, 18, 26))
+        self.assertEqual(box_transformed.pMax, Point(10, 23, 30))
+        
+        box_transformed2 = scale(2, 3, 4)(box)
+        self.assertTrue(isinstance(box_transformed2, BBox))
+        self.assertEqual(box_transformed2.pMin, Point(-2, -6, -16))
+        self.assertEqual(box_transformed2.pMax, Point(0, 9, 0))
+
 
 if __name__ == '__main__':
     unittest.main()
