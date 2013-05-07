@@ -153,6 +153,12 @@ class Transform(object):
             ret = union(ret, self(Point(elt.pMax.x, elt.pMax.y, elt.pMax.z)))
             return ret
 
+    def __mul__(self, t):
+        """Overload the multiplication operator for TxT."""
+        m = self.m * t.m
+        m_inv = t.m_inv * self.m_inv
+        return Transform(m, m_inv)
+
     def __str__(self):
         """Return a string describing the transform."""
         return "Transform (m='%s', m_inv='%s')" % (str(self.m), str(self.m_inv))
