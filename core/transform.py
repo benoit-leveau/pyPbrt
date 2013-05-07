@@ -91,7 +91,20 @@ class Transform(object):
         lc2 = self(Vector(0, 0, 1)).length_squared()
         not_one = lambda x: x<0.999 or x>1.001
         return not_one(la2) or not_one(lb2) or not_one(lc2)
-    
+
+    def swap_handedness(self):
+        """Return True if matrix has changed handedness."""
+        det = ((self.m.m[0][0] * \
+                (self.m.m[1][1] * self.m.m[2][2] - \
+                 self.m.m[1][2] * self.m.m[2][1])) - \
+               (self.m.m[0][1] * \
+                (self.m.m[1][0] * self.m.m[2][2] - \
+                 self.m.m[1][2] * self.m.m[2][0])) + \
+               (self.m.m[0][2] * \
+                (self.m.m[1][0] * self.m.m[2][1] - \
+                 self.m.m[1][1] * self.m.m[2][0])))
+        return det < 0.0
+
     def __eq__(self, t):
         """Overload the comparison operator."""
         return self.m == t.m and self.m_inv == t.m_inv
