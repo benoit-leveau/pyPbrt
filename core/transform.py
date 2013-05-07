@@ -21,6 +21,17 @@ class Matrix4x4(object):
                   [t20, t21, t22, t23],
                   [t30, t31, t32, t33]]
 
+    def __mul__(self, m2):
+        """Overload the multiplication operator."""
+        r = Matrix4x4()
+        for i in range(4):
+            for j in range(4):
+                r.m[i][j] = self.m[i][0] * m2.m[0][j] + \
+                            self.m[i][1] * m2.m[1][j] + \
+                            self.m[i][2] * m2.m[2][j] + \
+                            self.m[i][3] * m2.m[3][j]
+        return r
+
     def __eq__(self, m2):
         """Overload the comparison operator."""
         for i in range(4):
