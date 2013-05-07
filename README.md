@@ -24,6 +24,9 @@ Parts of pbrt that are closely tied to the C++ implementation, like the MemoryAr
 A more clever approach, if this project wasn't meant for learning purposes, would be to have a Python bindings to a C++ implementation of pbrt, something that can even be 
 automated with a framework like py++ (http://sourceforge.net/projects/pygccxml/)
 
+Once the project is finished, I'll also try to see if I can get decent running times by switching the low-level parts (geometry and transformation classes) to C++, or by using PyCuda.
+
+
 Installation
 ============
 
