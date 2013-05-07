@@ -567,21 +567,25 @@ class BBox(object):
         return "BBox (min='%s', max='%s')" % (str(self.pMin), str(self.pMax))
 
 
-def union(b, b_or_p):
+def union(b, elt):
     """Return the union of a BBox and a Point/BBox."""
-    ret = BBox()
-    if isinstance(b_or_p, Point):
-        ret.pMin.x = min(b.pMin.x, b_or_p.x)
-        ret.pMin.y = min(b.pMin.y, b_or_p.y)
-        ret.pMin.z = min(b.pMin.z, b_or_p.z)
-        ret.pMax.x = max(b.pMax.x, b_or_p.x)
-        ret.pMax.y = max(b.pMax.y, b_or_p.y)
-        ret.pMax.z = max(b.pMax.z, b_or_p.z)
-    else:
-        ret.pMin.x = min(b.pMin.x, b_or_p.pMin.x)
-        ret.pMin.y = min(b.pMin.y, b_or_p.pMin.y)
-        ret.pMin.z = min(b.pMin.z, b_or_p.pMin.z)
-        ret.pMax.x = max(b.pMax.x, b_or_p.pMax.x)
-        ret.pMax.y = max(b.pMax.y, b_or_p.pMax.y)
-        ret.pMax.z = max(b.pMax.z, b_or_p.pMax.z)
-    return ret
+    if isinstance(elt, Point):
+        ret = BBox()
+        ret.pMin.x = min(b.pMin.x, elt.x)
+        ret.pMin.y = min(b.pMin.y, elt.y)
+        ret.pMin.z = min(b.pMin.z, elt.z)
+        ret.pMax.x = max(b.pMax.x, elt.x)
+        ret.pMax.y = max(b.pMax.y, elt.y)
+        ret.pMax.z = max(b.pMax.z, elt.z)
+        return ret
+    elif isinstance(elt, BBox):
+        ret = BBox()
+        ret.pMin.x = min(b.pMin.x, elt.pMin.x)
+        ret.pMin.y = min(b.pMin.y, elt.pMin.y)
+        ret.pMin.z = min(b.pMin.z, elt.pMin.z)
+        ret.pMax.x = max(b.pMax.x, elt.pMax.x)
+        ret.pMax.y = max(b.pMax.y, elt.pMax.y)
+        ret.pMax.z = max(b.pMax.z, elt.pMax.z)
+        return ret
+    raise TypeError("second argument must be a Point or BBox")
+
