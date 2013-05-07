@@ -2,8 +2,8 @@
 
 import math
 
-from core.geometry import Point, Vector, Normal, Ray, RayDifferential
-from core.geometry import normalize, cross
+from core.geometry import Point, Vector, Normal, Ray, RayDifferential, BBox
+from core.geometry import normalize, cross, union
 
 
 class Matrix4x4(object):
@@ -132,6 +132,16 @@ class Transform(object):
             ray.o = self(ray.o)
             ray.d = self(ray.d)
             return ray
+        elif isinstance(elt, BBox):
+            ret = BBox(self(Point(elt.pMin.x, elt.pMin.y, elt.pMin.z)))
+            ret = union(ret, self(Point(elt.pMax.x, elt.pMin.y, elt.pMin.z)))
+            ret = union(ret, self(Point(elt.pMin.x, elt.pMax.y, elt.pMin.z)))
+            ret = union(ret, self(Point(elt.pMin.x, elt.pMin.y, elt.pMax.z)))
+            ret = union(ret, self(Point(elt.pMin.x, elt.pMax.y, elt.pMax.z)))
+            ret = union(ret, self(Point(elt.pMax.x, elt.pMax.y, elt.pMin.z)))
+            ret = union(ret, self(Point(elt.pMax.x, elt.pMin.y, elt.pMax.z)))
+            ret = union(ret, self(Point(elt.pMax.x, elt.pMax.y, elt.pMax.z)))
+            return ret
 
     def __str__(self):
         """Return a string describing the transform."""
