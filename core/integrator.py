@@ -33,7 +33,7 @@ class SurfaceIntegrator(Integrator):
 
 def specular_reflect(ray, bsdf, rng, isect, renderer, scene, sample):
     """Trace a ray for specular reflection."""
-    wo = -ray.d * wi ###
+    wo = -ray.d
     p = bsdf.dg_shading.p
     n = bsdf.dg_shading.nn
 
@@ -51,7 +51,7 @@ def specular_reflect(ray, bsdf, rng, isect, renderer, scene, sample):
 
 def specular_transmit(ray, bsdf, rng, isect, renderer, scene, sample):
     """Trace a ray for specular transmission."""
-    wo = -ray.d * wi ###
+    wo = -ray.d
     p = bsdf.dg_shading.p
     n = bsdf.dg_shading.nn
 
