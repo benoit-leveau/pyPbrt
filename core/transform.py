@@ -90,7 +90,17 @@ class Transform(object):
         return self.m != t.m or self.m_inv != t.m_inv
     
     def __call__(self, elt):
-        """Override the operator()."""
+        """Override the operator().
+
+        Supported operations:
+        * Transform(Point)
+        * Transform(Vector)
+        * Transform(Normal)
+        * Transform(Ray)
+        * Transform(RayDifferential)
+        * Transform(BBox)
+        
+        """
         if isinstance(elt, Point):
             x = elt.x
             y = elt.y
