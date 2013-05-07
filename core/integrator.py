@@ -38,7 +38,7 @@ def specular_reflect(ray, bsdf, rng, isect, renderer, scene, sample):
     n = bsdf.dg_shading.nn
 
     # retrieve the value, vector and probability of a sampled direction
-    f, wi, pdf = bsdf.sample_f(wo, BSDFSample(rng),
+    f, wi, pdf = bsdf.sample_f(wo, BSDFSample.from_rng(rng),
                                BxDFType(BSDF_REFLECTION | BSDF_SPECULAR))
 
     L = 0.0
@@ -56,7 +56,7 @@ def specular_transmit(ray, bsdf, rng, isect, renderer, scene, sample):
     n = bsdf.dg_shading.nn
 
     # retrieve the value, vector and probability of a sampled direction
-    f, wi, pdf = bsdf.sample_f(wo, BSDFSample(rng),
+    f, wi, pdf = bsdf.sample_f(wo, BSDFSample.from_rng(rng),
                                BxDFType(BSDF_TRANSMISSION | BSDF_SPECULAR))
 
     L = 0.0
