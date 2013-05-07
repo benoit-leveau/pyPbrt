@@ -73,6 +73,18 @@ class TestGeometry(unittest.TestCase):
         self.assertEqual(box_transformed2.pMin, Point(-2, -6, -16))
         self.assertEqual(box_transformed2.pMax, Point(0, 9, 0))
 
+    def test_transform_transform(self):
+        m1 = scale(2, 3, 4) * translate(Point(10, 20, 30))
+        m2 = translate(Point(20, 60, 120)) * scale(2, 3, 4)
+        self.assertEqual(m1, m2)
+
+    def test_transform_handedness(self):
+        m1 = translate(Point(-17, 2, 31)) * scale(0.5, 6 , 1.4) * rotate(35, Vector(-15, 20, 0.2))
+        self.assertFalse(m1.swap_handedness())
+
+        m2 = translate(Point(5, 6, 7)) * scale(2, -3 , 4) * rotate(17, Vector(-1, 4, -2))
+        self.assertTrue(m2.swap_handedness())
+
 
 if __name__ == '__main__':
     unittest.main()
