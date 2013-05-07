@@ -177,6 +177,15 @@ class TestGeometry(unittest.TestCase):
         bbox3 = BBox(Point(-1, -1, -1),
                      Point(0.5, 0.5, 0.5))
         self.assertEqual(bbox1.overlaps(bbox3), True)
+
+    def test_bounding_box_7(self):
+        bbox = BBox(Point(0, 0, 0),
+                    Point(2, 3, 2))
+        p, r = bbox.bounding_sphere()
         
+        self.assertEqual(p, Point(1,1.5,1))
+        self.assertEqual(r, math.sqrt(1.5*1.5+1+1))
+
+
 if __name__ == '__main__':
     unittest.main()
