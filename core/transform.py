@@ -2,6 +2,7 @@
 
 import math
 
+from core.pbrt import eq
 from core.geometry import Point, Vector, Normal, Ray, RayDifferential, BBox
 from core.geometry import normalize, cross, union
 
@@ -36,7 +37,7 @@ class Matrix4x4(object):
         """Overload the comparison operator."""
         for i in range(4):
             for j in range(4):
-                if self.m[i][j] != m2.m[i][j]:
+                if not eq(self.m[i][j], m2.m[i][j]):
                     return False
         return True
 
@@ -44,7 +45,7 @@ class Matrix4x4(object):
         """Overload the comparison operator."""
         for i in range(4):
             for j in range(4):
-                if self.m[i][j] != m2.m[i][j]:
+                if not eq(self.m[i][j], m2.m[i][j]):
                     return True
         return False
 
