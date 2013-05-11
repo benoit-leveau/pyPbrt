@@ -1,10 +1,12 @@
 """Transformation Classes."""
 
 import math
+import copy
 
 from core.pbrt import eq
 from core.geometry import Point, Vector, Normal, Ray, RayDifferential, BBox
 from core.geometry import normalize, cross, union
+from core.quaternion import Quaternion
 
 
 class Matrix4x4(object):
@@ -381,3 +383,58 @@ def inverse(m):
     return Matrix4x4.from_array(minv)
 
 
+
+def decompose(matrix):
+    """Decompose a Matrix4x4 into T, R and S components.
+
+    Returns:
+    T , Vector
+    R , Quaternion
+    S , Matrix4x4
+
+    """
+    R = Quaternion()
+    S = Matrix4x4()
+    
+    # Extract translation _T_ from transformation matrix
+    T = Vector(matrix.m[0][3],
+               matrix.m[1][3],
+               matrix.m[2][3])
+
+    # Compute new transformation matrix _M_ without translation
+    M = Matrix4x4.from_matrix4x4(matrix)
+    for i in range(3):
+        M.m[i][3] = 0.0
+        M.m[3][i] = 0.0
+    M.m[3][3] = 1.0
+
+    # Extract rotation _R_ from transformation matrix
+    norm = 1.0
+    count = 0
+    R = Matrix4x4.from_matrix4x4(M)
+    while (count<100 and norm>0.0001):
+        # Compute next matrix _Rnext_ in series
+        Rnext = Matrix4x4()
+        Rit = inverse(transpose(R))
+        for i in range(4):
+            for j in range(4):
+                Rnext.m[i][j] = 0.5 * (R.m[i][j] + Rit.m[i][j])
+
+        # Compute norm of difference between _R_ and _Rnext_
+        norm = 0.0
+        for i in range(3):
+            n = abs(R.m[i][0] - Rnext.m[i][0]) + \
+                abs(R.m[i][1] - Rnext.m[i][1]) + \
+                abs(R.m[i][2] - Rnext.m[i][2])
+            norm = max(norm, n)
+
+        R = Rnext
+        count += 1
+
+    # XXX TODO FIXME deal with flip...
+    Rquat = Quaternion.from_transform(Transform(R))
+
+    # Compute scale _S_ using rotation and original matrix
+    S = inverse(R) * M
+
+    return T, Rquat, S
