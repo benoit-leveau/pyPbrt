@@ -326,6 +326,58 @@ def look_at(pos, look, up):
 
 def inverse(m):
     """Return the inverse of matrix m."""
-    # dummy implementation for now
-    return m
+    indxc = [0, 0, 0, 0]
+    indxr = [0, 0, 0, 0]
+    ipiv  = [0, 0, 0, 0]
+    minv = copy.deepcopy(m.m)
+    for i in range(4):
+        irow = -1
+        icol = -1
+        big = 0.0
+        # Choose pivot
+        for j in range(4):
+            if (ipiv[j] != 1):
+                for k in range(4):
+                    if (ipiv[k] == 0):
+                        if (abs(minv[j][k]) >= big):
+                            big = float(abs(minv[j][k]))
+                            irow = j
+                            icol = k
+                    elif (ipiv[k] > 1):
+                        raise Exception("Singular matrix in MatrixInvert")
+        ipiv[icol] += 1
+        # Swap rows _irow_ and _icol_ for pivot
+        if (irow != icol):
+            for k in range(4):
+                # swap
+                minv[irow][k], minv[icol][k] = minv[icol][k], minv[irow][k]
+                
+        indxr[i] = irow
+        indxc[i] = icol
+        if (minv[icol][icol] == 0.0):
+            raise Exception("Singular matrix in MatrixInvert")
+
+        # Set $m[icol][icol]$ to one by scaling row _icol_ appropriately
+        pivinv = 1.0 / minv[icol][icol]
+        minv[icol][icol] = 1.0
+        for j in range(4):
+            minv[icol][j] *= pivinv
+
+        # Subtract this row from others to zero out their columns
+        for j in range(4):
+            if (j != icol):
+                save = minv[j][icol]
+                minv[j][icol] = 0
+                for k in range(4):
+                    minv[j][k] -= minv[icol][k]*save
+
+    # Swap columns to reflect permutation
+    for j in range(3,-1,-1):
+        if (indxr[j] != indxc[j]):
+            for k in range(4):
+                # swap
+                minv[k][indxr[j]], minv[k][indxc[j]] = \
+                                   minv[k][indxc[j]], minv[k][indxr[j]]
+    return Matrix4x4.from_array(minv)
+
 
