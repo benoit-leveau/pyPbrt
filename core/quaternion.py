@@ -4,7 +4,7 @@ import math
 
 from core.pbrt import clamp, eq
 from core.geometry import Vector, dot
-from core.transform import Matrix4x4, Transform, transpose
+import core.transform
 
 
 class Quaternion(object):
@@ -69,7 +69,7 @@ class Quaternion(object):
         wy = self.v.y * self.w
         wz = self.v.z * self.w
 
-        m = Matrix4x4()
+        m = core.transform.Matrix4x4()
         m.m[0][0] = 1.0 - 2.0 * (yy + zz)
         m.m[0][1] =       2.0 * (xy + wz)
         m.m[0][2] =       2.0 * (xz - wy)
@@ -80,7 +80,8 @@ class Quaternion(object):
         m.m[2][1] =       2.0 * (yz - wx)
         m.m[2][2] = 1.0 - 2.0 * (xx + yy)
             
-        return Transform(transpose(m), m)
+        return core.transform.Transform(
+            core.transform.transpose(m), m)
         
     def __add__(self, q):
         """Overload the addition operator."""
