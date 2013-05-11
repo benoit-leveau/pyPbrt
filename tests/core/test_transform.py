@@ -1,7 +1,7 @@
 import unittest
 
 from core.geometry import Point, Vector, Normal, Ray, RayDifferential, BBox
-from core.transform import translate, scale, rotate_x, rotate_y, rotate_z, rotate
+from core.transform import translate, scale, rotate_x, rotate_y, rotate_z, rotate, decompose
 
 
 class TestGeometry(unittest.TestCase):
@@ -84,6 +84,25 @@ class TestGeometry(unittest.TestCase):
 
         m2 = translate(Point(5, 6, 7)) * scale(2, -3 , 4) * rotate(17, Vector(-1, 4, -2))
         self.assertTrue(m2.swap_handedness())
+
+    def test_inverse(self):
+        m1 = scale(2.0, 3.0, 4.0)
+        m2 = scale(1.0/2.0, 1.0/3.0, 1.0/4.0)
+        self.assertEqual(m1.inverse(), m2)
+        self.assertEqual(m1.m_inv, m2.m)
+        self.assertEqual(m2.m_inv, m1.m)
+
+    def test_decompose(self):
+        vector_translate = Vector(10.0, 20.0, 30.0)
+        matrix_translate = translate(vector_translate)
+        matrix_rotation = rotate(35.0, Vector(1.0, 2.0, 3.0))
+        vector_scale = Vector(1.2, 3.4, 3.2)
+        matrix_scale = scale(vector_scale.x, vector_scale.y, vector_scale.z)
+        transform = matrix_translate * matrix_rotation * matrix_scale
+        vector_, quaternion_, scale_ = decompose(transform.m)
+        self.assertEqual(vector_translate, vector_)
+        self.assertEqual(matrix_rotation, quaternion_.to_transform())
+        self.assertEqual(matrix_scale.m, scale_)
 
 
 if __name__ == '__main__':
