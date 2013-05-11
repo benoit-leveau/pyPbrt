@@ -36,6 +36,18 @@ class Vector(object):
     def normalize(self):
         """Returns a normalized (unit length) vector."""
         return self/self.length()
+
+    def __add__(self, v):
+        """Overload the addition operator."""
+        return Vector(self.x + v.x,
+                      self.y + v.y,
+                      self.z + v.z)
+
+    def __sub__(self, v):
+        """Overload the subtraction operator."""
+        return Vector(self.x - v.x,
+                      self.y - v.y,
+                      self.z - v.z)
     
     def __neg__(self):
         """Overload the negation operator."""
