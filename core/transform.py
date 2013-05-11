@@ -135,7 +135,7 @@ class Transform(object):
         return self.m != t.m or self.m_inv != t.m_inv
     
     def __call__(self, elt):
-        """Override the operator().
+        """Overload the operator().
 
         Supported operations:
         * Transform(Point)
