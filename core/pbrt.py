@@ -20,3 +20,12 @@ def lerp(t, v1, v2):
 def eq(a, b, epsilon=1e-10):
     """Compares two float values."""
     return a==b or abs(a-b)<epsilon
+
+
+def clamp(value, low, high):
+    """Return the clamped value in the specified range."""
+    if value < low:
+        return low
+    elif value > high:
+        return high
+    return value
