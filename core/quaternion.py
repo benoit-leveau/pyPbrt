@@ -6,6 +6,7 @@ from core.pbrt import clamp, eq
 from core.geometry import Vector, dot
 from core.transform import Matrix4x4, Transform, transpose
 
+
 class Quaternion(object):
 
     """Class describing a Quaternion."""
@@ -117,14 +118,17 @@ class Quaternion(object):
     def __str__(self):
         """Return a string describing the quaternion."""
         return "Quaternion (%s, %f)" % (self.v, self.w)
-    
+
+
 def dot_quaternions(q1, q2):
     """Dot product of two quaternions."""
     return dot(q1.v, q2.v) + q1.w * q2.w
 
+
 def normalize(q):
     """Return a nornalized version of the quaternion."""
     return q / math.sqrt(dot_quaternions(q, q))
+
 
 def slerp(t, q1, q2):
     """Spherical Linear Interpolation between two quaternions."""
