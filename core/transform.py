@@ -22,6 +22,26 @@ class Matrix4x4(object):
                   [t20, t21, t22, t23],
                   [t30, t31, t32, t33]]
 
+    @classmethod
+    def from_matrix4x4(cls, matrix):
+        """Copy constructor."""
+        return cls(
+            matrix.m[0][0], matrix.m[0][1], matrix.m[0][2], matrix.m[0][3],
+            matrix.m[1][0], matrix.m[1][1], matrix.m[1][2], matrix.m[1][3],
+            matrix.m[2][0], matrix.m[2][1], matrix.m[2][2], matrix.m[2][3],
+            matrix.m[3][0], matrix.m[3][1], matrix.m[3][2], matrix.m[3][3]
+            )
+
+    @classmethod
+    def from_array(cls, array):
+        """Constructor form 4x4 array."""
+        return cls(
+            array[0][0], array[0][1], array[0][2], array[0][3],
+            array[1][0], array[1][1], array[1][2], array[1][3],
+            array[2][0], array[2][1], array[2][2], array[2][3],
+            array[3][0], array[3][1], array[3][2], array[3][3]
+            )
+
     def __mul__(self, m2):
         """Overload the multiplication operator."""
         r = Matrix4x4()
