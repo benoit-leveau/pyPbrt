@@ -383,6 +383,137 @@ def inverse(m):
     return Matrix4x4.from_array(minv)
 
 
+class AnimatedTransform(object):
+
+    """Class describing an Animated Transform."""
+
+    def __init__(self, transform1, time1, transform2, time2):
+        """Default constructor for AnimatedTransform."""
+        self.start_time = float(time1)
+        self.end_time = float(time2)
+        self.start_transform = Transform.from_transform(transform1)
+        self.end_transform = Transform.from_transform(transform2)
+        self.t_0, self.r_o, self.s_o = decompose(self.start_transform.m)
+        self.t_1, self.r_1, self.s_1 = decompose(self.end_transform.m)
+
+    def interpolate(self, time):
+        """."""
+        # Handle boundary conditions for matrix interpolation
+        if (not self.actually_animated or time <= self.start_time):
+            return Transform.from_transform(self.start_transform)
+        if (time >= self.endTime):
+            return self.end_transform
+
+        dt = (time - startTime) / (endTime - startTime)
+        # Interpolate translation at _dt_
+        trans = (1.0 - dt) * self.t_0 + dt * self.t_1
+
+        # Interpolate rotation at _dt_
+        rotate = slerp(dt, r_0, r_1)
+
+        # Interpolate scale at _dt_
+        scale = Matrix4x4()
+        for i in range(3):
+            for j in range(3):
+                scale.m[i][j] = lerp(dt, S[0].m[i][j], S[1].m[i][j])
+
+        # Compute interpolated matrix as product of interpolated components
+        return translate(trans) * \
+               rotate.to_transform() * \
+               Transform.from_matrix4x4(scale)
+
+    def motion_bounds(self, bbox, use_inverse):
+        """."""
+        if (not self.actually_animated):
+            return inverse(self.startTransform)(bbox)
+        ret = BBox()
+        n_steps = 128
+        for i in range(n_steps):
+            t = Transform()
+            time = lerp(float(i)/float(n_steps-1),
+                        self.start_time,
+                        self.end_time)
+            t = self.Interpolate(time)
+            if (use_inverse):
+                t = inverse(t)
+            ret = union(ret, t(b))
+        return ret
+
+    def has_scale(self):
+        """Return True if the transform has a scale component."""
+        return self.start_transform.has_scale() or \
+               self.end_transform.has_scale()
+    
+    def __call__(self, *args):
+        """Overload the operator().
+
+        Supported operations:
+        * AnimatedTransform(Ray)
+        * AnimatedTransform(RayDifferential)
+        * AnimatedTransform(float, Point)
+        * AnimatedTransform(float, Vector)
+        
+        """
+        
+        if len(args) == 1:
+            if isinstance(args[0], Ray):
+                return self.__call_ray(args[0])
+            elif isinstance(args[0], RayDifferential):
+                return self.__call_raydiff(args[0])
+        elif len(args) == 2:
+            if isinstance(args[0], float) and isinstance(args[1], Point):
+                return self.__call_float_point(args[0], args[1])
+            elif isinstance(args[0], float) and isinstance(args[1], Vector):
+                return self.__call_float_vector(args[0], args[1])
+        raise TypeError("Invalid call.")
+
+    def __call_ray(self, ray):
+        """Implementation of AnimatedTransform(Ray)."""
+        if (not self.actuall_animated) or ray.time <= self.start_time:
+            ray_interpolated = self.start_transform(ray)
+        elif ray.time >= self.end_time:
+            ray_interpolated = self.end_transform(ray)
+        else:
+            transform = self.interpolate(r.time)
+            ray_interpolated = transform(ray)
+        ray_interpolated.time = ray.time
+        return ray_interpolated
+
+    def __call_rayd(self, raydiff):
+        """Implementation of AnimatedTransform(RayDifferential)."""
+        if (not self.actuall_animated) or ray.time <= self.start_time:
+            ray_interpolated = self.start_transform(ray)
+        elif ray.time >= self.end_time:
+            ray_interpolated = self.end_transform(ray)
+        else:
+            transform = self.interpolate(r.time)
+            ray_interpolated = transform(ray)
+        ray_interpolated.time = ray.time
+        return ray_interpolated
+        
+
+    def __call_float_point(self, time, point):
+        """Implementation of AnimatedTransform(float, Point)."""
+        if (not self.actually_animated) or time <= self.start_time:
+            return self.start_transform(point)
+        elif time >= self.end_time:
+            return self.end_transform(point)
+        t = self.interpolate(time)
+        return t(point)
+
+    def __call_float_vector(self, time, vector):
+        """Implementation of AnimatedTransform(float, Vector)."""
+        if (not self.actually_animated) or time <= self.start_time:
+            return self.start_transform(vector)
+        elif time >= self.end_time:
+            return self.end_transform(vector)
+        t = self.interpolate(time)
+        return t(vector)
+
+    def __str__(self):
+        """Return a string describing the animated transform."""
+        return "AnimatedTransform (s=%d, e=%f, m_s='%s', m_e='%s')" % (self.start_time, self.end_time, str(self.start_transform), str(self.end_transform))
+        
 
 def decompose(matrix):
     """Decompose a Matrix4x4 into T, R and S components.
