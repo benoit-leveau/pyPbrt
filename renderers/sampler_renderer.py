@@ -6,7 +6,7 @@ from core.renderer import Renderer
 from core.parallel import Task, num_system_cores
 from core.rng import RNG
 from core.spectrum import Spectrum
-
+from core.sampler import Sample
 from core.logger import logger
 
 
@@ -14,26 +14,27 @@ class SamplerRenderer(Renderer):
 
     """Renderer driven by a stream of samples."""
 
-    def __init__(self, sampler, camera, si, vi):
+    def __init__(self, sampler, camera, surface_integrator, volume_integrator):
         """Default constructor for SamplerRenderer."""
-        super(SamplererRenderer, self).__init__()
+        super(SamplerRenderer, self).__init__()
         self.sampler = sampler
         self.camera = camera
-        self.surface_integrator = si
-        self.volume_integrator = vi
+        self.surface_integrator = surface_integrator
+        self.volume_integrator = volume_integrator
         
     def render(self, scene):
         """Render a scene."""
 
         # allow integrators to do preprocessing
-        self.surface_integrator.preprocess(scene, camera, self)
-        self.volume_integrator.preprocess(scene, camera, self)
+        self.surface_integrator.preprocess(scene, self.camera, self)
+        self.volume_integrator.preprocess(scene, self.camera, self)
 
         # allocate and initialize smaple
-        self.sample = Sample(self.sampler,
-                             self.surface_integrator,
-                             self.volume_integrator,
-                             self.scene)
+        self.sample = Sample.from_sampler(
+            self.sampler,
+            self.surface_integrator,
+            self.volume_integrator,
+            scene)
 
         # compute number of SamplerRendererTasks to create for rendering
         n_pixels = self.camera.film.x_resolution * self.camera.film.y_resolution
@@ -43,7 +44,7 @@ class SamplerRenderer(Renderer):
         # create and launch SamplerRendererTasks for rendering image
         render_tasks = []
         for i in range(n_tasks):
-            render_tasks.append(SamplerRendererTask(self.scene,
+            render_tasks.append(SamplerRendererTask(scene,
                                                     self,
                                                     self.camera,
                                                     self.sampler,
@@ -66,9 +67,9 @@ class SamplerRenderer(Renderer):
         if not isect:
             isect = Intersection()
         Li = Spectrum(0.0)
-        hit, isect = self.scene.intersect(ray)
+        hit, isect = scene.intersect(ray)
         if hit:
-            Li = self.surface_integrator.Li(self.scene,
+            Li = self.surface_integrator.Li(scene,
                                             self,
                                             ray,
                                             isect,
@@ -76,10 +77,10 @@ class SamplerRenderer(Renderer):
                                             rng)
         else:
             # handle ray that doesn't intersect any geometry
-            for light in self.scene.lights:
+            for light in scene.lights:
                 Li += light.Le(ray)
         
-        Lvi = self.volume_integrator.Li(self.scene,
+        Lvi = self.volume_integrator.Li(scene,
                                         self,
                                         ray,
                                         sample,
@@ -92,7 +93,7 @@ class SamplerRenderer(Renderer):
 
     def transmittance(self, scene, ray, sample, rng):
         """Compute the attenuation by volumetric scattering along a ray."""
-        return self.volume_integrator.transmittance(self.scene,
+        return self.volume_integrator.transmittance(scene,
                                                     self,
                                                     ray,
                                                     sample,
