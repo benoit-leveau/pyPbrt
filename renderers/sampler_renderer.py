@@ -4,7 +4,7 @@
 from core.pbrt import round_up_pow_2
 from core.renderer import Renderer
 from core.parallel import Task, num_system_cores
-from core.rng import Rng
+from core.rng import RNG
 from core.spectrum import Spectrum
 
 from core.logger import logger
@@ -124,7 +124,7 @@ class SamplerRendererTask(Task):
             return
         
         # Declare local variables used for rendering loop
-        rng = Rng(self.task_num)
+        rng = RNG(self.task_num)
 
         # allocate space for samples and intersections
         max_samples = self.sampler.maximum_sample_count()
