@@ -560,6 +560,30 @@ class BBox(object):
             radius = 0.0
         return center, radius
 
+    def intersect_p(self, ray):
+        """Compute intersections with the bounding box."""
+        t0 = ray.mint
+        t1 = ray.maxt
+        for i in range(3):
+            # Update interval for _i_th bounding box slab
+            if ray.d[i] == 0.0:
+                inv_ray_dir = float('inf')
+            else:
+                inv_ray_dir = 1.0 / ray.d[i]
+            t_near = (self.p_min[i] - ray.o[i]) * inv_ray_dir
+            t_far  = (self.p_max[i] - ray.o[i]) * inv_ray_dir
+
+            # Update parametric interval from slab intersection $t$s
+            if (t_near > t_far):
+                t_near, t_far = t_far, t_near
+            if t_near > t0:
+                t0 = t_near
+            if t_far < t1:
+                t1 = t_far
+            if t0 > t1:
+                return False, float('inf'), float('inf')
+        return True, t0, t1
+
     def __getitem__(self, index):
         """Overload the bracket operator.
         
