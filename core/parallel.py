@@ -2,6 +2,19 @@
 
 
 import multiprocessing
+from abc import ABCMeta, abstractmethod
+
+
+class Task(object):
+
+    """Interface class for tasks."""
+
+    __metaclass__ = ABCMeta
+
+    @abstractmethod
+    def run(self):
+        """Run the task."""
+        pass
 
 
 def num_system_cores():
