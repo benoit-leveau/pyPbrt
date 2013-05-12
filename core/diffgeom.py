@@ -8,6 +8,7 @@ class DifferentialGeometry(object):
     """Class describing a DifferentialGeoemtry for intersections)."""
 
     def __init__(self):
+        """Default constructor for DifferentialGeometry."""
         self.p = Point()
         self.nn = Normal()
         
