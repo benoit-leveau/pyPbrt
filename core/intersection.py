@@ -45,6 +45,6 @@ class Intersection(object):
 
     def __str__(self):
         """Return a string describing the intersection."""
-        return "Intersection (prim='%s', dg='%s')" % (self.primitive,
-                                                      self.dg)
+        return "Intersection (ids=%d/%d, prim='%s', dg='%s')" % \
+               (self.shape_id, self.primitive_id, self.primitive, self.dg)
 
