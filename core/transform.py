@@ -526,6 +526,19 @@ class AnimatedTransform(object):
         return "AnimatedTransform (s=%d, e=%f, m_s='%s', m_e='%s')" % (self.start_time, self.end_time, str(self.start_transform), str(self.end_transform))
         
 
+def perspective(fov, near, far):
+    """Build a Transform corresponding to a perspective field of view."""
+    # Perform projective divide
+    persp = Matrix4x4(1, 0,            0,               0,
+                      0, 1,            0,               0,
+                      0, 0,  far/ (far - near),  -far*near / (far - near),
+                      0, 0,            1,               0);
+
+    # Scale to canonical viewing volume
+    inv_tan_ang = 1.0 / math.tan(math.radians(fov) / 2.0)
+    return scale(inv_tan_ang, inv_tan_ang, 1.0) * Transform(persp)
+
+
 def decompose(matrix):
     """Decompose a Matrix4x4 into T, R and S components.
 
