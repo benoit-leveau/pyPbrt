@@ -195,14 +195,14 @@ class Transform(object):
             ray.d = self(ray.d)
             return ray
         elif isinstance(elt, BBox):
-            ret = BBox(self(Point(elt.pMin.x, elt.pMin.y, elt.pMin.z)))
-            ret = union(ret, self(Point(elt.pMax.x, elt.pMin.y, elt.pMin.z)))
-            ret = union(ret, self(Point(elt.pMin.x, elt.pMax.y, elt.pMin.z)))
-            ret = union(ret, self(Point(elt.pMin.x, elt.pMin.y, elt.pMax.z)))
-            ret = union(ret, self(Point(elt.pMin.x, elt.pMax.y, elt.pMax.z)))
-            ret = union(ret, self(Point(elt.pMax.x, elt.pMax.y, elt.pMin.z)))
-            ret = union(ret, self(Point(elt.pMax.x, elt.pMin.y, elt.pMax.z)))
-            ret = union(ret, self(Point(elt.pMax.x, elt.pMax.y, elt.pMax.z)))
+            ret = BBox(self(Point(elt.p_min.x, elt.p_min.y, elt.p_min.z)))
+            ret = union(ret, self(Point(elt.p_max.x, elt.p_min.y, elt.p_min.z)))
+            ret = union(ret, self(Point(elt.p_min.x, elt.p_max.y, elt.p_min.z)))
+            ret = union(ret, self(Point(elt.p_min.x, elt.p_min.y, elt.p_max.z)))
+            ret = union(ret, self(Point(elt.p_min.x, elt.p_max.y, elt.p_max.z)))
+            ret = union(ret, self(Point(elt.p_max.x, elt.p_max.y, elt.p_min.z)))
+            ret = union(ret, self(Point(elt.p_max.x, elt.p_min.y, elt.p_max.z)))
+            ret = union(ret, self(Point(elt.p_max.x, elt.p_max.y, elt.p_max.z)))
             return ret
 
     def __mul__(self, t):

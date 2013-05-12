@@ -65,13 +65,13 @@ class TestGeometry(unittest.TestCase):
         box = BBox(Point(-1, -2, 0), Point(0, 3, -4))
         box_transformed = translate(Point(10, 20, 30))(box)
         self.assertTrue(isinstance(box_transformed, BBox))
-        self.assertEqual(box_transformed.pMin, Point(9, 18, 26))
-        self.assertEqual(box_transformed.pMax, Point(10, 23, 30))
+        self.assertEqual(box_transformed.p_min, Point(9, 18, 26))
+        self.assertEqual(box_transformed.p_max, Point(10, 23, 30))
         
         box_transformed2 = scale(2, 3, 4)(box)
         self.assertTrue(isinstance(box_transformed2, BBox))
-        self.assertEqual(box_transformed2.pMin, Point(-2, -6, -16))
-        self.assertEqual(box_transformed2.pMax, Point(0, 9, 0))
+        self.assertEqual(box_transformed2.p_min, Point(-2, -6, -16))
+        self.assertEqual(box_transformed2.p_max, Point(0, 9, 0))
 
     def test_transform_transform(self):
         m1 = scale(2, 3, 4) * translate(Point(10, 20, 30))

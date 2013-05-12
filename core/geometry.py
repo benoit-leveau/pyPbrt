@@ -471,68 +471,68 @@ class BBox(object):
         """Construct a BBox with optional points.
 
         >>> b = BBox(p)
-        >>> b.pMin == b.pMax
+        >>> b.p_min == b.p_max
 
         >>> b = BBox(p1, p2)
         >>> for i in range(3):
-        >>>     b.pMin[i] == min(p1[i], p2[i])
-        >>>     b.pMax[i] == max(p1[i], p2[i])
+        >>>     b.p_min[i] == min(p1[i], p2[i])
+        >>>     b.p_max[i] == max(p1[i], p2[i])
 
         """
         if p1 and p2:
-            self.pMin = Point(min(p1.x, p2.x),
+            self.p_min = Point(min(p1.x, p2.x),
                               min(p1.y, p2.y),
                               min(p1.z, p2.z))
-            self.pMax = Point(max(p1.x, p2.x),
+            self.p_max = Point(max(p1.x, p2.x),
                               max(p1.y, p2.y),
                               max(p1.z, p2.z))
         elif p1:
-            self.pMin = Point.from_point(p1)
-            self.pMax = Point.from_point(p1)
+            self.p_min = Point.from_point(p1)
+            self.p_max = Point.from_point(p1)
         elif p2:
-            self.pMin = Point.from_point(p2)
-            self.pMax = Point.from_point(p2)
+            self.p_min = Point.from_point(p2)
+            self.p_max = Point.from_point(p2)
         else:
-            self.pMin = Point(float('inf'), float('inf'), float('inf'))
-            self.pMax = Point(-float('inf'), -float('inf'), -float('inf'))
+            self.p_min = Point(float('inf'), float('inf'), float('inf'))
+            self.p_max = Point(-float('inf'), -float('inf'), -float('inf'))
 
     @classmethod
     def from_bbox(cls, b):
         """Copy constructor."""
-        return cls(b.pMin, b.pMax)
+        return cls(b.p_min, b.p_max)
 
     def overlaps(self, b):
         """Return True if overlaps with specified bounding box."""
-        x = (self.pMax.x >= b.pMin.x) and (self.pMin.x <= b.pMax.x)
-        y = (self.pMax.y >= b.pMin.y) and (self.pMin.y <= b.pMax.y)
-        z = (self.pMax.z >= b.pMin.z) and (self.pMin.z <= b.pMax.z)
+        x = (self.p_max.x >= b.p_min.x) and (self.p_min.x <= b.p_max.x)
+        y = (self.p_max.y >= b.p_min.y) and (self.p_min.y <= b.p_max.y)
+        z = (self.p_max.z >= b.p_min.z) and (self.p_min.z <= b.p_max.z)
         return x and y and z
 
     def inside(self, pt):
         """Return True if point is inside the box."""
-        x = (pt.x >= self.pMin.x) and (pt.x <= self.pMax.x)
-        y = (pt.y >= self.pMin.y) and (pt.y <= self.pMax.y)
-        z = (pt.z >= self.pMin.z) and (pt.z <= self.pMax.z)
+        x = (pt.x >= self.p_min.x) and (pt.x <= self.p_max.x)
+        y = (pt.y >= self.p_min.y) and (pt.y <= self.p_max.y)
+        z = (pt.z >= self.p_min.z) and (pt.z <= self.p_max.z)
         return x and y and z
 
     def expand(self, delta):
         """Pad the bounding box by a constant factor."""
-        self.pMin -= Vector(delta, delta, delta)
-        self.pMax += Vector(delta, delta, delta)
+        self.p_min -= Vector(delta, delta, delta)
+        self.p_max += Vector(delta, delta, delta)
 
     def surface_area(self):
         """Compute the surface area of the six faces of the box."""
-        d = self.pMax - self.pMin
+        d = self.p_max - self.p_min
         return 2.0 * (d.x*d.y + d.x*d.z + d.y*d.z)
     
     def volume(self):
         """Compute the volume of the box."""
-        d = self.pMax - self.pMin
+        d = self.p_max - self.p_min
         return d.x*d.y*d.z
 
     def maximum_extent(self):
         """Compute the volume of the box."""
-        diag = self.pMax - self.pMin
+        diag = self.p_max - self.p_min
         if diag.x>diag.y and diag.y>diag.z:
             return 0
         elif diag.y>diag.z:
@@ -541,21 +541,21 @@ class BBox(object):
             return 2
     
     def lerp(self, tx, ty, tz):
-        """Linear Interpolation between pMin and pMax."""
-        return Point(lerp(tx, self.pMin.x, self.pMax.x),
-                     lerp(ty, self.pMin.y, self.pMax.y))
+        """Linear Interpolation between p_min and p_max."""
+        return Point(lerp(tx, self.p_min.x, self.p_max.x),
+                     lerp(ty, self.p_min.y, self.p_max.y))
                 
     def offset(self, p):
         """Return position of a point relative to the corners."""
-        return Vector((p.x - self.pMin.x) / (self.pMax.x - self.pMin.x),
-                      (p.y - self.pMin.y) / (self.pMax.y - self.pMin.y),
-                      (p.z - self.pMin.z) / (self.pMax.z - self.pMin.z))
+        return Vector((p.x - self.p_min.x) / (self.p_max.x - self.p_min.x),
+                      (p.y - self.p_min.y) / (self.p_max.y - self.p_min.y),
+                      (p.z - self.p_min.z) / (self.p_max.z - self.p_min.z))
 
     def bounding_sphere(self):
         """Return a sphere containing the entire bounding box."""
-        center = 0.5 * (self.pMin+self.pMax)
+        center = 0.5 * (self.p_min+self.p_max)
         if self.inside(center):
-            radius = distance(center, self.pMax)
+            radius = distance(center, self.p_max)
         else:
             radius = 0.0
         return center, radius
@@ -564,40 +564,40 @@ class BBox(object):
         """Overload the bracket operator.
         
         Example:
-        bbox[0] will return bbox.pMin
-        bbox[1] will return bbox.pMax
+        bbox[0] will return bbox.p_min
+        bbox[1] will return bbox.p_max
         
         """
         if index == 0:
-            return self.pMin
+            return self.p_min
         elif index == 1:
-            return self.pMax
+            return self.p_max
         raise IndexError("list index out of range")
 
     def __str__(self):
         """Return a string describing the bbox."""
-        return "BBox (min='%s', max='%s')" % (str(self.pMin), str(self.pMax))
+        return "BBox (min='%s', max='%s')" % (str(self.p_min), str(self.p_max))
 
 
 def union(b, elt):
     """Return the union of a BBox and a Point/BBox."""
     if isinstance(elt, Point):
         ret = BBox()
-        ret.pMin.x = min(b.pMin.x, elt.x)
-        ret.pMin.y = min(b.pMin.y, elt.y)
-        ret.pMin.z = min(b.pMin.z, elt.z)
-        ret.pMax.x = max(b.pMax.x, elt.x)
-        ret.pMax.y = max(b.pMax.y, elt.y)
-        ret.pMax.z = max(b.pMax.z, elt.z)
+        ret.p_min.x = min(b.p_min.x, elt.x)
+        ret.p_min.y = min(b.p_min.y, elt.y)
+        ret.p_min.z = min(b.p_min.z, elt.z)
+        ret.p_max.x = max(b.p_max.x, elt.x)
+        ret.p_max.y = max(b.p_max.y, elt.y)
+        ret.p_max.z = max(b.p_max.z, elt.z)
         return ret
     elif isinstance(elt, BBox):
         ret = BBox()
-        ret.pMin.x = min(b.pMin.x, elt.pMin.x)
-        ret.pMin.y = min(b.pMin.y, elt.pMin.y)
-        ret.pMin.z = min(b.pMin.z, elt.pMin.z)
-        ret.pMax.x = max(b.pMax.x, elt.pMax.x)
-        ret.pMax.y = max(b.pMax.y, elt.pMax.y)
-        ret.pMax.z = max(b.pMax.z, elt.pMax.z)
+        ret.p_min.x = min(b.p_min.x, elt.p_min.x)
+        ret.p_min.y = min(b.p_min.y, elt.p_min.y)
+        ret.p_min.z = min(b.p_min.z, elt.p_min.z)
+        ret.p_max.x = max(b.p_max.x, elt.p_max.x)
+        ret.p_max.y = max(b.p_max.y, elt.p_max.y)
+        ret.p_max.z = max(b.p_max.z, elt.p_max.z)
         return ret
     raise TypeError("second argument must be a Point or BBox")
 

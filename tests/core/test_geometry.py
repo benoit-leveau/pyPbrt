@@ -106,17 +106,17 @@ class TestGeometry(unittest.TestCase):
     def test_bounding_box_1(self):
         # test default constructor
         b = BBox()
-        self.assertEqual(b.pMin,
+        self.assertEqual(b.p_min,
                          Point(float('inf'), float('inf'), float('inf')))
-        self.assertEqual(b.pMax,
+        self.assertEqual(b.p_max,
                          Point(-float('inf'), -float('inf'), -float('inf')))
 
     def test_bounding_box_2(self):
         # test constructor from one point
         p = self.get_random_point()
         b1 = BBox(p)
-        self.assertEqual(b1.pMin, p)
-        self.assertEqual(b1.pMin, b1.pMax)
+        self.assertEqual(b1.p_min, p)
+        self.assertEqual(b1.p_min, b1.p_max)
 
     def test_bounding_box_3(self):
         # test constructor from two points
@@ -124,16 +124,16 @@ class TestGeometry(unittest.TestCase):
         p2 = self.get_random_point()
         b2 = BBox(p1, p2)
         for i in range(3):
-            self.assertEqual(b2.pMin[i], min(p1[i], p2[i]))
-            self.assertEqual(b2.pMax[i], max(p1[i], p2[i]))
+            self.assertEqual(b2.p_min[i], min(p1[i], p2[i]))
+            self.assertEqual(b2.p_max[i], max(p1[i], p2[i]))
 
     def test_bounding_box_4(self):
         # test copy constructor
         bbox = BBox(Point(5, 5, 5),
                     Point(7, 7, 7))
         bbox2 = BBox.from_bbox(bbox)
-        self.assertEqual(bbox.pMin, bbox2.pMin)
-        self.assertEqual(bbox.pMax, bbox2.pMax)
+        self.assertEqual(bbox.p_min, bbox2.p_min)
+        self.assertEqual(bbox.p_max, bbox2.p_max)
 
         p1 = Point(6, 5.5, 7)
         p2 = Point(6, 7.5, 7)
@@ -154,8 +154,8 @@ class TestGeometry(unittest.TestCase):
                      Point(1, -1, 1))
         p1 = Point(-3,3,0.5)
         bbox2 = union(bbox1, p1)
-        self.assertEqual(bbox2.pMin, Point(-3, -2, 0))
-        self.assertEqual(bbox2.pMax, Point(1, 3, 1))
+        self.assertEqual(bbox2.p_min, Point(-3, -2, 0))
+        self.assertEqual(bbox2.p_max, Point(1, 3, 1))
 
     def test_bounding_box_6(self):
         bbox1 = BBox(Point(0, -2, 0),
@@ -163,10 +163,10 @@ class TestGeometry(unittest.TestCase):
         bbox2 = BBox(Point(-2, 0, -2),
                      Point(-1, 1, -1))
         bbox3 = union(bbox1, bbox2)
-        self.assertEqual(bbox3.pMin, Point(-2, -2, -2))
-        self.assertEqual(bbox3.pMax, Point(1, 1, 1))
+        self.assertEqual(bbox3.p_min, Point(-2, -2, -2))
+        self.assertEqual(bbox3.p_max, Point(1, 1, 1))
 
-    def test_bounding_box_6(self):
+    def test_bounding_box_7(self):
         bbox1 = BBox(Point(0, 0, 0),
                      Point(2, 2, 2))
 
@@ -178,7 +178,7 @@ class TestGeometry(unittest.TestCase):
                      Point(0.5, 0.5, 0.5))
         self.assertEqual(bbox1.overlaps(bbox3), True)
 
-    def test_bounding_box_7(self):
+    def test_bounding_box_8(self):
         bbox = BBox(Point(0, 0, 0),
                     Point(2, 3, 2))
         p, r = bbox.bounding_sphere()
