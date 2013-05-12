@@ -45,10 +45,10 @@ class Shape(object):
         """Return True if the shape can be intersected."""
         return True
 
-    def refine(self):
+    def refine(self, refined):
         """Refine the current shape.
 
-        Returns an array of shape.
+        Fills the array with the list of refined shapes.
         """
         raise NotImplementedError()
 
