@@ -40,7 +40,7 @@ class Shape(object):
 
     def world_bound(self):
         """Return bounding box in world space."""
-        return object_to_world(self.object_bound())
+        return self.object_to_world(self.object_bound())
 
     def can_intersect(self):
         """Return True if the shape can be intersected."""
