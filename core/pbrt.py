@@ -57,3 +57,9 @@ def quadratic(A, B, C):
     if (t0 > t1):
         t0, t1 = t1, t0
     return True, t0, t1
+
+def round_to_int(value):
+    """Round to closest integer."""
+    # might be problematic, see online discussions about round errors
+    return int(value+0.5)
+
