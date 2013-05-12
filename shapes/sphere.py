@@ -43,7 +43,7 @@ class Sphere(Shape):
         # Solve quadratic equation for _t_ values
         found, t0, t1 = quadratic(A, B, C)
         if not found:
-            return False, 0.0, 0.0, None
+            return False, float('inf'), 0.0, None
 
         # Compute intersection distance along ray
         if (t0 > ray.maxt or t1 < ray.mint):
@@ -52,7 +52,7 @@ class Sphere(Shape):
         if (t0 < ray.mint):
             t_hit = t1
             if (t_hit > ray.maxt):
-                return False, 0.0, 0.0, None
+                return False, float('inf'), 0.0, None
 
         # Compute sphere hit position and $\phi$
         phi_t = ray(t_hit)
@@ -67,9 +67,9 @@ class Sphere(Shape):
             (self.z_max <  self.radius and phi_t.z > self.z_max) or \
             phi > self.phi_max):
             if (t_hit == t1):
-                return False, 0.0, 0.0, None
+                return False, float('inf'), 0.0, None
             if (t1 > ray.maxt):
-                return False, 0.0, 0.0, None
+                return False, float('inf'), 0.0, None
             t_hit = t1;
             # Compute sphere hit position and $\phi$
             phi_t = ray(t_hit);
@@ -81,7 +81,7 @@ class Sphere(Shape):
             if ((self.z_min > -self.radius and phi_t.z < self.z_min) or \
                 (self.z_max <  self.radius and phi_t.z > self.z_max) or \
                 phi > self.phi_max):
-                return False, 0.0, 0.0, None
+                return False, float('inf'), 0.0, None
 
         # Find parametric representation of sphere hit
         u = phi / self.phi_max
