@@ -98,6 +98,23 @@ class Vector(object):
             return self.z
         raise IndexError("list index out of range")
 
+    def __setitem__(self, index, value):
+        """Overload the bracket operator for assignments.
+            
+        Example:
+            v1[0] = 0.3 will set v1.x
+            similarly for v1[1] and v1.y, v1[2] and v1.z
+        
+        """
+        if index == 0:
+            self.x = float(value)
+        elif index == 1:
+            self.y = float(value)
+        elif index == 2:
+            self.z = float(value)
+        else:
+            raise IndexError("list index out of range")
+
     def __str__(self):
         """Return a string describing the vector."""
         return "Vector (%f, %f, %f)" % (self.x, self.y, self.z)
@@ -212,8 +229,8 @@ class Point(object):
         """Overload the bracket operator.
             
         Example:
-            v1[0] will return v1.x
-            similarly for v1[1] and v1.y, v1[2] and v1.z
+            p1[0] will return p1.x
+            similarly for p1[1] and p1.y, p1[2] and p1.z
         
         """
         if index == 0:
@@ -223,6 +240,23 @@ class Point(object):
         elif index == 2:
             return self.z
         raise IndexError("list index out of range")
+
+    def __setitem__(self, index, value):
+        """Overload the bracket operator for assignments.
+            
+        Example:
+            p1[0] = 0.3 will set p1.x
+            similarly for p1[1] and p1.y, p1[2] and p1.z
+        
+        """
+        if index == 0:
+            self.x = float(value)
+        elif index == 1:
+            self.y = float(value)
+        elif index == 2:
+            self.z = float(value)
+        else:
+            raise IndexError("list index out of range")
     
     def __str__(self):
         """Return a string describing the point."""
@@ -319,6 +353,23 @@ class Normal(object):
         elif index == 2:
             return self.z
         raise IndexError("list index out of range")
+
+    def __setitem__(self, index, value):
+        """Overload the bracket operator for assignments.
+            
+        Example:
+            n1[0] = 0.3 will set n1.x
+            similarly for n1[1] and n1.y, n1[2] and n1.z
+        
+        """
+        if index == 0:
+            self.x = float(value)
+        elif index == 1:
+            self.y = float(value)
+        elif index == 2:
+            self.z = float(value)
+        else:
+            raise IndexError("list index out of range")
     
     def __str__(self):
         """Return a string describing the normal."""
