@@ -186,6 +186,23 @@ class TestGeometry(unittest.TestCase):
         self.assertEqual(p, Point(1,1.5,1))
         self.assertEqual(r, math.sqrt(1.5*1.5+1+1))
 
+    def test_bounding_box_9(self):
+        bbox = BBox(Point(-1, -1, -1),
+                    Point(1, 1, 1))
+        ray1 = Ray(Point(10, 10, 10), Vector(-1, -1, -1))
+        intersect, hit0, hit1 = bbox.intersect_p(ray1)
+        self.assertTrue(intersect)
+
+        ray2 = Ray(Point(10, 10, 10), Vector(-1, 1, -1))
+        intersect, hit0, hit1 = bbox.intersect_p(ray2)
+        self.assertFalse(intersect)
+
+        ray3 = Ray(Point(0, 0, 10), Vector(0, 0, -1))
+        intersect, hit0, hit1 = bbox.intersect_p(ray3)
+        self.assertTrue(intersect)
+        self.assertEqual(hit0, 9.0)
+        self.assertEqual(hit1, 11.0)
+
 
 if __name__ == '__main__':
     unittest.main()
