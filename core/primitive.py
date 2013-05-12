@@ -155,7 +155,7 @@ class TransformedPrimitive(Primitive):
         """Default constructor for TransformedPrimitive."""
         super(TransformedPrimitive, self).__init__()
         self.primitive = primitive
-        self.world_to_primitive = world_to_primitive
+        self.world_to_primitive = Transform.from_transform(world_to_primitive)
 
     def world_bound(self):
         """Return the bounding box of the primitive, in world space."""
