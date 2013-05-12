@@ -95,8 +95,8 @@ class TestGeometry(unittest.TestCase):
         m3 = translate(Point(5, 6, 7)) * scale(2, -3 , 4) * rotate(17, Vector(-1, 4, -2))
         m4 = m3.inverse()
         identity = Transform()
-        self.assertEqual(m3*m4, identity)
-        self.assertEqual(m4*m3, identity)
+        self.assertTrue((m3*m4).is_identity())
+        self.assertTrue((m4*m3).is_identity())
 
     def test_decompose(self):
         vector_translate = Vector(10.0, 20.0, 30.0)
