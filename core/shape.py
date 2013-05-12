@@ -28,6 +28,7 @@ class Shape(object):
 
     @classmethod
     def _get_shape_id(cls):
+        """Return a new unique shape id."""
         shape_id = cls.next_shape_id
         cls.next_shape_id += 1
         return shape_id
