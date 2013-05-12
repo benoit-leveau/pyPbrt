@@ -10,15 +10,13 @@ from core.reflection import BSDFSample
 class Integrator(object):
     
     """Interface for Integrator Classes."""
-
-    __metaclass__ = ABCMeta
     
-    @abstractmethod
-    def preprocess(self):
+    def preprocess(self, scene, camera, renderer):
+        """Optional preprocess for the integrator."""
         pass
 
-    @abstractmethod
-    def request_samples(self):
+    def request_samples(self, sampler, sample, scene):
+        """Request samples to the sampler."""
         pass
 
 
@@ -26,12 +24,15 @@ class SurfaceIntegrator(Integrator):
 
     """SurfaceIntegrator Interface."""
 
+    __metaclass__ = ABCMeta
+
     @abstractmethod
-    def Li(self, scene, renderer, ray, isect, sample, rng):
+    def Li(self, scene, renderer, ray, intersection, sample, rng):
+        """Return light emitted at the intersection."""
         pass
 
 
-def specular_reflect(ray, bsdf, rng, isect, renderer, scene, sample):
+def specular_reflect(ray, bsdf, rng, intersection, renderer, scene, sample):
     """Trace a ray for specular reflection."""
     wo = -ray.d
     p = bsdf.dg_shading.p
@@ -49,7 +50,7 @@ def specular_reflect(ray, bsdf, rng, isect, renderer, scene, sample):
     return L
 
 
-def specular_transmit(ray, bsdf, rng, isect, renderer, scene, sample):
+def specular_transmit(ray, bsdf, rng, intersection, renderer, scene, sample):
     """Trace a ray for specular transmission."""
     wo = -ray.d
     p = bsdf.dg_shading.p
