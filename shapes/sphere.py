@@ -26,8 +26,8 @@ class Sphere(Shape):
         
     def object_bound(self):
         """Return bounding box in object space."""
-        return BBox(Point(-radius, -radius, self.z_min),
-                    Point( radius,  radius, self.z_max))
+        return BBox(Point(-self.radius, -self.radius, self.z_min),
+                    Point( self.radius,  self.radius, self.z_max))
 
     def intersect(self, r):
         """Intersect the ray with the shape."""
