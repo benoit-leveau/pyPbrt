@@ -6,25 +6,25 @@ class Scene(object):
 
     """Class describing a pyPbrt scene."""
 
-    def __init__(self, accel, lts=None, vr=None):
+    def __init__(self, accel, lights=None, volume_region=None):
         """Default constructor for Scene."""
 
         # Primitive
         self.aggregate = accel
 
         # array of Light
-        if lts:
-            self.lights = lts
+        if lights:
+            self.lights = lights
         else:
             self.lights = []
 
         # VolumeRegion
-        self.volume_region = vr
+        self.volume_region = volume_region
 
         # initialize bounding box
         self.bound = self.aggregate.world_bound()
-        if volumeRegion:
-            self.bound = union(self.bound, volume_region.world_bound())
+        if self.volume_region:
+            self.bound = union(self.bound, self.volume_region.world_bound())
 
     def intersect(self, ray):
         """Intersect a ray with the scene."""
