@@ -96,7 +96,7 @@ class GeometricPrimitive(Primitive):
 
     def can_intersect(self):
         """Return True if the primitive allow intersection calls."""
-        return shape.can_intersect()
+        return self.shape.can_intersect()
 
     def refine(self, refined):
         """Fill the list with refined shapes."""
