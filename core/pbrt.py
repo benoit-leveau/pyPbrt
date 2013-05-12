@@ -1,5 +1,7 @@
 """Helper Functions."""
 
+import math
+
 
 def round_up_pow_2(v):
     """Round up specified integer to the closest (upper) power of 2."""
@@ -29,3 +31,29 @@ def clamp(value, low, high):
     elif value > high:
         return high
     return value
+
+
+def quadratic(A, B, C):
+    # Find quadratic discriminant
+    discrim = B*B - 4.0*A*C
+    if (discrim < 0.0):
+        return False, float('inf'), float('inf')
+    root_discrim = math.sqrt(discrim)
+
+    # Compute quadratic _t_ values
+    if (B < 0):
+        q = -0.5 * (B-root_discrim)
+    else:
+        q = -0.5 * (B+root_discrim)
+
+    if A != 0.0:
+        t0 = q / A
+    else:
+        t0 = float('inf')
+    if q != 0.0:
+        t1 = C / q
+    else:
+        t1 = float('inf')    
+    if (t0 > t1):
+        t0, t1 = t1, t0
+    return True, t0, t1
