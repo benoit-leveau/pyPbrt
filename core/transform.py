@@ -98,6 +98,11 @@ class Transform(object):
                 self.m_inv = inverse(self.m)
             else:
                 self.m_inv = matrix_inverse
+
+    @classmethod
+    def from_transform(self, transform):
+        """Copy constructor."""
+        return Transform(transform.m, transform.m_inv)
     
     def inverse(self):
         """Return the inverse of the transform."""
