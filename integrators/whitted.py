@@ -4,6 +4,7 @@
 from core.spectrum import Spectrum
 from core.light import LightSample
 from core.geometry import abs_dot
+from core.integrator import SurfaceIntegrator
 
 
 class WhittedIntegrator(SurfaceIntegrator):
