@@ -78,10 +78,14 @@ class Matrix4x4(object):
 
 def transpose(m):
     """Return the transpose of m."""
-    return Matrix4x4(m.m[0][0], m.m[1][0], m.m[2][0], m.m[3][0],
-                     m.m[0][1], m.m[1][1], m.m[2][1], m.m[3][1],
-                     m.m[0][2], m.m[1][2], m.m[2][2], m.m[3][2],
-                     m.m[0][3], m.m[1][3], m.m[2][3], m.m[3][3])
+    if isinstance(m, Matrix4x4):
+        return Matrix4x4(m.m[0][0], m.m[1][0], m.m[2][0], m.m[3][0],
+                         m.m[0][1], m.m[1][1], m.m[2][1], m.m[3][1],
+                         m.m[0][2], m.m[1][2], m.m[2][2], m.m[3][2],
+                         m.m[0][3], m.m[1][3], m.m[2][3], m.m[3][3])
+    elif isinstance(m, Transform):
+        return Transform(transpose(m.m),
+                         transpose(m.m_inv))
 
 class Transform(object):
 
@@ -100,9 +104,9 @@ class Transform(object):
                 self.m_inv = Matrix4x4.from_matrix4x4(matrix_inverse)
 
     @classmethod
-    def from_transform(self, transform):
+    def from_transform(cls, transform):
         """Copy constructor."""
-        return Transform(transform.m, transform.m_inv)
+        return cls(transform.m, transform.m_inv)
     
     def inverse(self):
         """Return the inverse of the transform."""
@@ -333,6 +337,8 @@ def look_at(pos, look, up):
 
 def inverse(m):
     """Return the inverse of matrix m."""
+    if isinstance(m, Transform):
+        return Transform(m.m_inv, m.m)
     indxc = [0, 0, 0, 0]
     indxr = [0, 0, 0, 0]
     ipiv  = [0, 0, 0, 0]
@@ -425,7 +431,7 @@ class AnimatedTransform(object):
         # Compute interpolated matrix as product of interpolated components
         return translate(trans) * \
                rotate.to_transform() * \
-               Transform.from_matrix4x4(scale)
+               Transform(scale)
 
     def motion_bounds(self, bbox, use_inverse):
         """."""
