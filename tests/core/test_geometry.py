@@ -24,9 +24,15 @@ class TestGeometry(unittest.TestCase):
         self.assertEqual(p[0], 1.0)
         self.assertEqual(p[1], 2.0)
         self.assertEqual(p[2], 3.0)
-        
+
         self.assertEqual(self.p1 * 4, 2 * self.p2)
         self.assertEqual(self.p2 - self.p1, self.v1)
+
+        # operator[] for assignments
+        p = Point(1.0, 2.0, 3.0)
+        for i in range(3):
+            p[i] = 9.0
+            self.assertEqual(p[i], 9.0)
 
     def test_vector(self):
         # operator[]
@@ -43,6 +49,12 @@ class TestGeometry(unittest.TestCase):
         self.assertEqual(self.v1.length_squared(), 3)
         self.assertEqual(self.v1.length(), math.sqrt(3))
 
+        # operator[] for assignments
+        v = Vector(1.0, 2.0, 3.0)
+        for i in range(3):
+            v[i] = 9.0
+            self.assertEqual(v[i], 9.0)
+
     def test_normal(self):
         # operator[]
         n = Normal(1.0, 2.0, 3.0)
@@ -54,6 +66,12 @@ class TestGeometry(unittest.TestCase):
         n2 = Normal(1, 0, 0)
         v = Vector(-0.5, -0.1, 0.2)
         self.assertEqual(face_forward(n, v), -n)
+
+        # operator[] for assignments
+        n = Normal(1.0, 2.0, 3.0)
+        for i in range(3):
+            n[i] = 9.0
+            self.assertEqual(n[i], 9.0)
     
     def test_ray(self):
         r = Ray(Point(0, 0, 0), Vector(1, 2, 3))
