@@ -93,11 +93,11 @@ class Transform(object):
             self.m = Matrix4x4()
             self.m_inv = Matrix4x4()
         else:
-            self.m = matrix
+            self.m = Matrix4x4.from_matrix4x4(matrix)
             if matrix_inverse is None:
                 self.m_inv = inverse(self.m)
             else:
-                self.m_inv = matrix_inverse
+                self.m_inv = Matrix4x4.from_matrix4x4(matrix_inverse)
 
     @classmethod
     def from_transform(self, transform):
