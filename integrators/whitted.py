@@ -15,12 +15,12 @@ class WhittedIntegrator(SurfaceIntegrator):
         """Default constructor for WhittedIntegrator."""
         self.max_depth = max_depth
 
-    def Li(self, scene, renderer, ray, isect, sample, rng):
+    def Li(self, scene, renderer, ray, intersection, sample, rng):
         """Computes the radiance along a ray."""
         L = Spectrum(0.0)
 
         # evaluate BSDF at hit point
-        bsdf = isect.get_bsdf(ray)
+        bsdf = intersection.get_bsdf(ray)
         
         # initialize common variables for Whitted integrator
         p = bsdf.dg_shading.p
@@ -28,13 +28,13 @@ class WhittedIntegrator(SurfaceIntegrator):
         wo = -ray.d
 
         # compute emitted light if ray hit an area light source
-        L += isect.Le(wo)
+        L += intersection.Le(wo)
         
         # add contribution of each light source
         for light in self.scene.lights:
             light_sample = LightSample.from_rng(rng)
             Li, wi, pdf, visibility = light.sample_L(p,
-                                                     isect.ray_epsilon,
+                                                     intersection.ray_epsilon,
                                                      light_sample,
                                                      ray.time)
             if Li.is_black() or pdf == 0.0:
@@ -48,10 +48,10 @@ class WhittedIntegrator(SurfaceIntegrator):
                                                                        rng) / pdf
         if ray.depth+1 < self.max_depth:
             # trace rays for specular reflection and refraction
-            L += specular_reflect(ray, bsdf, rng, isect,
+            L += specular_reflect(ray, bsdf, rng, intersection,
                                        renderer, scene, sample)
 
-            L+= specular_transmit(ray, bsdf, rng, isect,
+            L+= specular_transmit(ray, bsdf, rng, intersection,
                                        renderer, scene, sample)
 
         return L
