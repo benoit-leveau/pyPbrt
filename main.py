@@ -1,3 +1,4 @@
+#!/usr/bin/python
 
 def main():
     options = Options()
@@ -21,3 +22,5 @@ def main():
 
     pbrt_cleanup()
     
+if __name__ == '__main__':
+    main()
