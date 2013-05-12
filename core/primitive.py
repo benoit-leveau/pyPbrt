@@ -107,17 +107,17 @@ class GeometricPrimitive(Primitive):
                                               self.material,
                                               self.area_light))
 
-    def intersect(self, ray, intersect):
+    def intersect(self, ray, intersection):
         """Compute an intersection."""
-        intersect, t_hit, ray_epsilon, dg = self.shape.intersect(ray)
-        if not intersect:
+        intersected, t_hit, ray_epsilon, dg = self.shape.intersect(ray)
+        if not intersected:
             return False, float('inf'), 0.0, None
-        intersect.primitive = self
-        intersect.world_to_object = self.shape.world_to_object
-        intersect.object_to_world = self.shape.object_to_world
-        intersect.shape_id = self.shape.shape_id
-        intersect.primitive_id = self.primitive_id
-        intersect.ray_epsilon = ray_epsilon
+        intersection.primitive = self
+        intersection.world_to_object = self.shape.world_to_object
+        intersection.object_to_world = self.shape.object_to_world
+        intersection.shape_id = self.shape.shape_id
+        intersection.primitive_id = self.primitive_id
+        intersection.ray_epsilon = ray_epsilon
         ray.maxt = t_hit
         return True
 
@@ -166,26 +166,26 @@ class TransformedPrimitive(Primitive):
         """Compute an intersection."""
         w2p = self.world_to_primitive.interpolate(ray.time)
         ray_primitive = w2p(ray)
-        isect = Intersection()
+        intersection = Intersection()
         found_intersect, ray_hit, ray_epsilon, dg = self.primitive.intersect(
-            ray_primitive, isect)
+            ray_primitive, intersection)
         if not found_intersect:
             return False
         ray.maxt = ray_primitive.maxt
-        isect.primitive_id = self.primitive_id
+        intersection.primitive_id = self.primitive_id
         if not w2p.is_identity():
             # Compute world-to-object transformation for instance
-            isect.world_to_object = isect.world_to_object * w2p
-            isect.object_to_world = inverse(isect.world_to_object)
+            intersection.world_to_object = intersection.world_to_object * w2p
+            intersection.object_to_world = inverse(intersection.world_to_object)
 
             # Transform instance's differential geometry to world space
             p2w = inverse(w2p)
-            isect.dg.p = p2w(isect->dg.p)
-            isect.dg.nn = normalize(p2w(isect.dg.nn))
-            isect.dg.dpdu = p2w(isect.dg.dpdu)
-            isect.dg.dpdv = p2w(isect.dg.dpdv)
-            isect.dg.dndu = p2w(isect.dg.dndu)
-            isect.dg.dndv = p2w(isect.dg.dndv)
+            intersection.dg.p = p2w(intersection.dg.p)
+            intersection.dg.nn = normalize(p2w(intersection.dg.nn))
+            intersection.dg.dpdu = p2w(intersection.dg.dpdu)
+            intersection.dg.dpdv = p2w(intersection.dg.dpdv)
+            intersection.dg.dndu = p2w(intersection.dg.dndu)
+            intersection.dg.dndv = p2w(intersection.dg.dndv)
         return True
 
     def intersect_p(self, ray):
