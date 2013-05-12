@@ -1,7 +1,7 @@
 import unittest
 
 from core.geometry import Point, Vector, Normal, Ray, RayDifferential, BBox
-from core.transform import translate, scale, rotate_x, rotate_y, rotate_z, rotate, decompose
+from core.transform import translate, scale, rotate_x, rotate_y, rotate_z, rotate, decompose, Transform
 
 
 class TestGeometry(unittest.TestCase):
@@ -91,6 +91,12 @@ class TestGeometry(unittest.TestCase):
         self.assertEqual(m1.inverse(), m2)
         self.assertEqual(m1.m_inv, m2.m)
         self.assertEqual(m2.m_inv, m1.m)
+
+        m3 = translate(Point(5, 6, 7)) * scale(2, -3 , 4) * rotate(17, Vector(-1, 4, -2))
+        m4 = m3.inverse()
+        identity = Transform()
+        self.assertEqual(m3*m4, identity)
+        self.assertEqual(m4*m3, identity)
 
     def test_decompose(self):
         vector_translate = Vector(10.0, 20.0, 30.0)
