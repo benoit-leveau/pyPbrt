@@ -16,7 +16,7 @@ class LightSample(object):
     def __init__(self):
         pass
 
-    @abstractmethod
+    @classmethod
     def from_rng(cls, rng):
         ret = cls()
         ret.u_pos[0] = rng.random_float()
