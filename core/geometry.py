@@ -217,6 +217,13 @@ class Point(object):
                      self.y * f,
                      self.z * f)
 
+    def __div__(self, f):
+        """Overload the division operator."""
+        inv = 1.0 / f
+        return Point(self.x * inv,
+                     self.y * inv,
+                     self.z * inv)
+
     def __eq__(self, p):
         """Overload the comparison operator."""
         return eq(self.x, p.x) and eq(self.y, p.y) and eq(self.z, p.z)
