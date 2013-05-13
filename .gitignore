@@ -40,3 +40,6 @@ nosetests.xml
 # Emacs
 \#*\#
 .\#*
+
+# OSX
+.DS_Store
