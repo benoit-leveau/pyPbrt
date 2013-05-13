@@ -29,10 +29,34 @@ class Camera(object):
         
     @abstractmethod
     def generate_ray(self, sample):
+        """Generate a Ray from the camera."""
         pass
 
-    def generate_ray_differentials(self, sample):
-        raise NotImplementedError("TODO")
+    def generate_ray_differential(self, sample):
+        """Generate a RayDifferential from the camera."""
+        # generate the ray
+        weight, ray = self.generate_ray(sample)
+        ray_diff = RayDifferential.from_ray(ray)
+        
+        # find ray after shifting one pixel in the x direction
+        sshift = CameraSample.from_sample(sample)
+        sshit.image_x += 1
+        weight_x, ray_x = self.generate_ray(sshift)
+        ray_diff.rx_origin = ray_x.o
+        ray_diff.rx_direction = ray_x.d
+        
+        # find ray after shifting one pixel in the y direction
+        sshit.image_x -= 1
+        sshit.image_y += 1
+        weight_y, ray_y = self.generate_ray(sshift)
+        ray_diff.ry_origin = ray_y.o
+        ray_diff.ry_direction = ray_y.d
+
+        if (weight_x == 0.0) or (weight_y == 0.0):
+            return 0.0, ray_diff
+
+        ray_diff.has_differentials = True
+        return weight, ray_diff
 
 
 class ProjectiveCamera(Camera):
