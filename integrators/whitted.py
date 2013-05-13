@@ -17,6 +17,8 @@ class WhittedIntegrator(SurfaceIntegrator):
 
     def Li(self, scene, renderer, ray, intersection, sample, rng):
         """Computes the radiance along a ray."""
+        return Spectrum(1.0)
+    
         L = Spectrum(0.0)
 
         # evaluate BSDF at hit point
