@@ -25,18 +25,27 @@ class Intersection(object):
 
     def get_bsdf(self, ray):
         """Compute the BSDF."""
+        if self.primitive is None:
+            logger.error("Intersect.get_bsdf() called with no primitive.")
+            return 0.0
         self.dg.compute_differentials(ray)
-        bsdf = self.primitive.get_bsdf(dg, self.object_to_world)
+        bsdf = self.primitive.get_bsdf(self.dg, self.object_to_world)
         return bsdf
 
     def get_bssrdf(self, ray):
         """Compute the BSSRDF."""
+        if self.primitive is None:
+            logger.error("Intersect.get_bssrddf() called with no primitive.")
+            return 0.0
         self.dg.compute_differentials(ray)
         bssrdf = self.primitive.get_bssrdf(dg, self.object_to_world)
         return bssrdf
 
     def Le(self, w):
         """Return the light emitted by the object."""
+        if self.primitive is None:
+            logger.error("Intersect.Le() called with no primitive.")
+            return Spectrum(0.0)
         area = self.primitive.get_area_light()
         if area:
             return area.L(self.dg.p, self.dg.nn, w)
