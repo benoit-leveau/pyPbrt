@@ -67,9 +67,17 @@ class DifferentialGeometry(object):
 
         return diff_geom
     
-    def compute_differentials(self, raydiff):
+    def compute_differentials(self, ray_diff):
         """Computes the differentials from a RayDifferential."""
-        return cls()
+        if ray_diff.has_differentials:
+            pass
+        
+        self.du_dx = 0.0
+        self.dv_dx = 0.0
+        self.du_dy = 0.0
+        self.dv_dy = 0.0
+        self.dp_dx = Vector(0, 0, 0)
+        self.dp_dy = Vector(0, 0, 0)
 
     def __str__(self):
         """Return a string describing the diff geometry."""
