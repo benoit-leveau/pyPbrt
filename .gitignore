@@ -43,3 +43,6 @@ nosetests.xml
 
 # OSX
 .DS_Store
+
+# Cython
+.build
