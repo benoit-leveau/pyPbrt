@@ -26,10 +26,10 @@ class Scene(object):
         if self.volume_region:
             self.bound = union(self.bound, self.volume_region.world_bound())
 
-    def intersect(self, ray):
+    def intersect(self, ray, intersection):
         """Intersect a ray with the scene."""
-        hit, isect = aggregate.intersect(ray)
-        return hit, isect
+        hit = self.aggregate.intersect(ray, intersection)
+        return hit
 
     def intersect_p(self, ray):
         """More efficient intersection function.
