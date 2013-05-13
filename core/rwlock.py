@@ -4,6 +4,38 @@ import threading
 
 version = """$Id: rwlock.py,v 1.1 2004/12/22 22:32:00 majid Exp $"""
 
+class DummyRWLock(object):
+    """
+A simple reader-writer lock Several readers can hold the lock
+simultaneously, XOR one writer. Write locks have priority over reads to
+prevent write starvation.
+"""
+    def __init__(self):
+        pass
+
+    def acquire_read(self):
+        """Acquire a read lock. Several threads can hold this typeof lock.
+It is exclusive with write locks."""
+        pass
+      
+    def acquire_write(self):
+        """Acquire a write lock. Only one thread can hold this lock, and
+only when no read locks are also held."""
+        pass
+      
+    def promote(self):
+        """Promote an already-acquired read lock to a write lock
+        WARNING: it is very easy to deadlock with this method"""
+        pass
+        
+    def demote(self):
+        """Demote an already-acquired write lock to a read lock"""
+        pass
+        
+    def release(self):
+        """Release a lock, whether read or write."""
+        pass
+
 class RWLock(object):
     """
 A simple reader-writer lock Several readers can hold the lock

@@ -1,7 +1,7 @@
 """Grid Accelerator."""
 
 from core.pbrt import clamp, round_to_int
-from core.rwlock import RWLock
+from core.rwlock import RWLock, DummyRWLock
 from core.primitive import Aggregate
 from core.geometry import BBox, Vector, union
 
@@ -136,7 +136,7 @@ class GridAccel(Aggregate):
                             self.voxels[index].add_primitive(primitive)
 
         # create reader-writer mutex for grid
-        self.rw_lock = RWLock()
+        self.rw_lock = DummyRWLock()
         
     def world_bound(self):
         """Return the bounding box in world space."""
