@@ -4,9 +4,12 @@ import math
 
 from core.pbrt import clamp, quadratic
 from core.shape import Shape
-from core.geometry import BBox, Point, Vector, Normal, \
+from core.geometry import BBox, Point, Vector, Normal, Ray, \
      cross, dot, distance_squared, normalize
 from core.diffgeom import DifferentialGeometry
+from core.geometry import coordinate_system
+# from core.monte_carlo import uniform_sample_sphere, uniform_sample_cone
+
 
 class Sphere(Shape):
     
@@ -193,7 +196,8 @@ class Sphere(Shape):
 
     def sample(self, u1, u2):
         """Sample the shape."""
-        p = Point(0, 0, 0) + self.radius * uniform_sample_sphere(u1, u2)
+        raise Exception("check_next_line")
+        p = Point(0, 0, 0) + self.radius * 1.0 # uniform_sample_sphere(u1, u2)
         ns = normalize(self.object_to_world(Normal(p.x, p.y, p.z)))
         if (self.reverse_orientation):
             ns *= -1.0
@@ -213,7 +217,9 @@ class Sphere(Shape):
         # Sample sphere uniformly inside subtended cone
         sin_theta_max2 = self.radius*self.radius / distance_squared(p, p_center)
         cos_theta_max = math.sqrt(max(0.0, 1.0 - sin_theta_max2))
-        r = Ray(p, uniform_sample_cone(u1, u2, cos_theta_max, wcX, wcY, wc), 1e-3)
+        raise Exception("next_line")
+        # r = Ray(p, uniform_sample_cone(u1, u2, cos_theta_max, wcX, wcY, wc), 1e-3)
+        r = Ray(p)
         intersect, t_hit, ray_epsilon, dg_sphere = self.intersect(r)
         if not intersect:
             t_hit = dot(p_center - p, normalize(r.d))
@@ -233,7 +239,9 @@ class Sphere(Shape):
         # Compute general sphere weight
         sin_theta_max2 = self.radius*self.radius / distance_squared(p, p_center)
         cos_theta_max = math.sqrt(max(0.0, 1.0 - sin_theta_max2))
-        return uniform_cone_pdf(cos_theta_max)
+        raise Exception("next_line")
+        # return uniform_cone_pdf(cos_theta_max)
+        return 0.0
     
     def __str__(self):
         """Return a string describing the sphere."""

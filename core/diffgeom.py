@@ -5,7 +5,7 @@ from core.transform import normalize, cross
 
 class DifferentialGeometry(object):
     
-    """Class describing a DifferentialGeoemtry for intersections)."""
+    """Class describing a DifferentialGeometry for intersections)."""
 
     def __init__(self):
         """Default constructor for DifferentialGeometry."""

@@ -128,12 +128,12 @@ class Sample(CameraSample):
     def add_1D(self, num):
         """Add a sample."""
         self.n1D.append(num)
-        return len(n1D)-1
+        return len(self.n1D)-1
 
     def add_2D(self, num):
         """Add a sample."""
         self.n2D.append(num)
-        return len(n2D)-1
+        return len(self.n2D)-1
 
     def duplicate(self, count):
         """Return a list of new duplicate samples."""

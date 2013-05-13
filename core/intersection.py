@@ -3,6 +3,7 @@
 from core.transform import Transform
 from core.diffgeom import DifferentialGeometry
 from core.spectrum import Spectrum
+from core.logger import logger
 
 
 class Intersection(object):
@@ -38,7 +39,7 @@ class Intersection(object):
             logger.error("Intersect.get_bssrddf() called with no primitive.")
             return 0.0
         self.dg.compute_differentials(ray)
-        bssrdf = self.primitive.get_bssrdf(dg, self.object_to_world)
+        bssrdf = self.primitive.get_bssrdf(self.dg, self.object_to_world)
         return bssrdf
 
     def Le(self, w):

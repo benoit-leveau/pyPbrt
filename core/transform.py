@@ -3,10 +3,10 @@
 import math
 import copy
 
-from core.pbrt import eq
+from core.pbrt import eq, lerp
 from core.geometry import Point, Vector, Normal, Ray, RayDifferential, BBox
 from core.geometry import normalize, cross, union
-from core.quaternion import Quaternion
+from core.quaternion import Quaternion, slerp
 
 
 class Matrix4x4(object):
@@ -415,18 +415,18 @@ class AnimatedTransform(object):
         if (time >= self.endTime):
             return self.end_transform
 
-        dt = (time - startTime) / (endTime - startTime)
+        dt = (time - self.start_time) / (self.end_ime - self.start_time)
         # Interpolate translation at _dt_
         trans = (1.0 - dt) * self.t_0 + dt * self.t_1
 
         # Interpolate rotation at _dt_
-        rotate = slerp(dt, r_0, r_1)
+        rotate = slerp(dt, self.r_0, self.r_1)
 
         # Interpolate scale at _dt_
         scale = Matrix4x4()
         for i in range(3):
             for j in range(3):
-                scale.m[i][j] = lerp(dt, S[0].m[i][j], S[1].m[i][j])
+                scale.m[i][j] = lerp(dt, self.s_o.m[i][j], self.s_1.m[i][j])
 
         # Compute interpolated matrix as product of interpolated components
         return translate(trans) * \
@@ -447,7 +447,8 @@ class AnimatedTransform(object):
             t = self.Interpolate(time)
             if (use_inverse):
                 t = inverse(t)
-            ret = union(ret, t(b))
+            raise Exception("check_code_next_line")
+            # ret = union(ret, t(b))
         return ret
 
     def has_scale(self):
@@ -485,23 +486,22 @@ class AnimatedTransform(object):
         elif ray.time >= self.end_time:
             ray_interpolated = self.end_transform(ray)
         else:
-            transform = self.interpolate(r.time)
+            transform = self.interpolate(ray.time)
             ray_interpolated = transform(ray)
         ray_interpolated.time = ray.time
         return ray_interpolated
 
     def __call_rayd(self, raydiff):
         """Implementation of AnimatedTransform(RayDifferential)."""
-        if (not self.actuall_animated) or ray.time <= self.start_time:
-            ray_interpolated = self.start_transform(ray)
-        elif ray.time >= self.end_time:
-            ray_interpolated = self.end_transform(ray)
+        if (not self.actuall_animated) or raydiff.time <= self.start_time:
+            ray_interpolated = self.start_transform(raydiff)
+        elif raydiff.time >= self.end_time:
+            ray_interpolated = self.end_transform(raydiff)
         else:
-            transform = self.interpolate(r.time)
-            ray_interpolated = transform(ray)
-        ray_interpolated.time = ray.time
+            transform = self.interpolate(raydiff.time)
+            ray_interpolated = transform(raydiff)
+        ray_interpolated.time = raydiff.time
         return ray_interpolated
-        
 
     def __call_float_point(self, time, point):
         """Implementation of AnimatedTransform(float, Point)."""
