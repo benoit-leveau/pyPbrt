@@ -1,5 +1,7 @@
 """Random Number Generator Class."""
 
+import random
+
 
 class RNG(object):
 
@@ -23,11 +25,11 @@ class RNG(object):
 
     def random_float(self):
         """Generate a random float."""
-        pass
+        return random.random()
 
     def random_uint(self):
         """Generate a random unsigned integer."""
-        pass
+        return random.randint(0,100)
     
     def __str__(self):
         """Return a string describing the pnrg."""
