@@ -21,6 +21,11 @@ class Vector(object):
         return cls(v.x, v.y, v.z)
     
     @classmethod
+    def from_point(cls, p):
+        """Construct a Vector from a Point."""
+        return cls(p.x, p.y, p.z)
+    
+    @classmethod
     def from_normal(cls, n):
         """Construct a Vector from a Normal."""
         return cls(n.x, n.y, n.z)
