@@ -1,5 +1,6 @@
 """SamplerRenderer Class."""
 
+import math
 
 from core.pbrt import round_up_pow_2
 from core.renderer import Renderer
@@ -8,6 +9,7 @@ from core.rng import RNG
 from core.spectrum import Spectrum
 from core.sampler import Sample
 from core.logger import logger
+from core.intersection import Intersection
 
 
 class SamplerRenderer(Renderer):
@@ -52,27 +54,29 @@ class SamplerRenderer(Renderer):
                                                     n_tasks-1-i,
                                                     n_tasks))
 
-        self.enqueue_tasks(render_tasks)
-        self.wait_for_all_tasks()
+        # self.enqueue_tasks(render_tasks)
+        # self.wait_for_all_tasks()
+        for task in render_tasks:
+            task.run()
         
         # clean up after rendering and store final image
         del(self.sample)
         self.camera.film.write_image()
 
-    def Li(self, scene, ray, sample, rng, isect=None, T=None):
+    def Li(self, scene, ray, sample, rng, intersection=None, T=None):
         """Compute the incident radiance along a given ray."""
         # allocate local variables for isect and T if needed
         if not T:
-            T = Spectrum()
-        if not isect:
-            isect = Intersection()
+            T = Spectrum(0.0)
+        if not intersection:
+            intersection = Intersection()
         Li = Spectrum(0.0)
-        hit, isect = scene.intersect(ray)
+        hit = scene.intersect(ray, intersection)
         if hit:
             Li = self.surface_integrator.Li(scene,
                                             self,
                                             ray,
-                                            isect,
+                                            intersection,
                                             sample,
                                             rng)
         else:
@@ -80,15 +84,10 @@ class SamplerRenderer(Renderer):
             for light in scene.lights:
                 Li += light.Le(ray)
         
-        Lvi = self.volume_integrator.Li(scene,
-                                        self,
-                                        ray,
-                                        sample,
-                                        rng,
-                                        T,
-                                        arena)
+        # Lvi = self.volume_integrator.Li(scene, self, ray, sample, rng, T)
+        # return T * Li + Lvi, intersection
 
-        return T * Li + Lvi
+        return Li, intersection, T
                                         
 
     def transmittance(self, scene, ray, sample, rng):
@@ -118,6 +117,8 @@ class SamplerRendererTask(Task):
     def run(self):
         """Execute the task."""
 
+        print "executing task %d/%d" % (self.task_num, self.task_count)
+        
         # get sub-sampler for SamplerRendererTask
         sampler = self.main_sampler.get_sub_sampler(self.task_num,
                                                     self.task_count)
@@ -128,12 +129,14 @@ class SamplerRendererTask(Task):
         rng = RNG(self.task_num)
 
         # allocate space for samples and intersections
-        max_samples = self.sampler.maximum_sample_count()
+        max_samples = sampler.maximum_sample_count()
         samples = self.orig_sample.duplicate(max_samples)
         rays = [] # RayDifferential[max_samples]
         Ls = [] # Spectrum[max_samples]
         Ts = [] # Spectrum[max_samples]
         isects = [] # Intersection[max_samples]
+        for i in range(max_samples):
+            isects.append(Intersection())
 
         # get samples from Sampler and update image
         while True:
@@ -146,39 +149,41 @@ class SamplerRendererTask(Task):
             # generate camera rays and compute radiance along rays
             for i in range(sample_count):
                 # find camera ray for samples[i]
-                ray_weight = self.camera.generate_ray_differential(samples[i],
-                                                                   rays[i])
+                ray_weight, ray_diff = self.camera.generate_ray_differential(samples[i])
+                
+                rays.append(ray_diff)
                 coeff = 1.0 / math.sqrt(sampler.samples_per_pixel)
-                rays[i].scale_differentials(coeff)
+                ray_diff.scale_differentials(coeff)
                 
                 # evaluate radiance along camera ray
                 if ray_weight > 0.0:
-                    radiance = self.renderer.Li(self.scene,
-                                                rays[i],
-                                                samples[i],
-                                                rng,
-                                                isects[i],
-                                                Ts[i]
-                                                )
-                    Ls[i] = ray_weight * radiance
+                    radiance, Ts_i, intersection = \
+                              self.renderer.Li(self.scene,
+                                               ray_diff,
+                                               samples[i],
+                                               rng,
+                                               isects[i])
+                    Ls_i = ray_weight * radiance
                 else:
-                    Ls[i] = 0.0
-                    Ts[i] = 1.0
+                    Ls_i = 0.0
+                    Ts_i = 1.0
 
+                Ls.append(Ls_i)
+                
                 # check for unexpected radiance values
-                if Ls[i].has_nan():
+                if Ls_i.has_nan():
                     logger.error(
                         "Not-a-number radiance value returned for image sample.  Setting to black.")
-                    Ls[i] = Spectrum(0.0)
-                elif Ls[i].y() < -1e-5:
+                    Ls_i = Spectrum(0.0)
+                elif Ls_i.y() < -1e-5:
                     logger.error(
-                        "Negative luminance value, %f, returned for image sample.  Setting to black." % Ls[i].y())
-                    Ls[i] = Spectrum(0.0)
-                elif is_inf(Ls[i].y()):
+                        "Negative luminance value, %f, returned for image sample.  Setting to black." % Ls_i.y())
+                    Ls_i = Spectrum(0.0)
+                elif Ls_i.y() == float('inf'):
                     logger.error(
                         "Infinite luminance value returned for image sample.  Setting to black.")
-                    Ls[i] = Spectrum(0.0)
-                
+                    Ls_i = Spectrum(0.0)
+
             # report sample results to Sampler, add contributions to image
             if sampler.report_results(samples, rays, Ls, isects, sample_count):
                 for i in range(sample_count):
