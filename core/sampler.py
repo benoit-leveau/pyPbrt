@@ -2,6 +2,8 @@
 
 from abc import ABCMeta, abstractmethod
 
+from core.pbrt import lerp
+
 
 class Sampler(object):
 
@@ -30,7 +32,12 @@ class Sampler(object):
         pass
 
     def report_results(self, samples, rays, ls, intersections, count):
-        """."""
+        """Read the samples back from the renderer.
+
+        Return True to tell the renderer to keep the samples.
+        Return False to tell the renderer to discard the samples.
+
+        """
         return True
 
     @abstractmethod
@@ -49,13 +56,13 @@ class Sampler(object):
         dy = self.y_pixel_end - self.y_pixel_start
         nx = count
         ny = 1
-        while(((nx * 0x1) == 0) and ((2*dx*ny) < (dy*nx))):
+        while(((nx & 0x1) == 0) and ((2*dx*ny) < (dy*nx))):
             nx >>= 1
             ny <<= 1
 
         # compute x and y pixel sample range for sub-window
         xo = num % nx
-        yo = num % nx
+        yo = num % ny
         tx0 = float(xo) / float(nx)
         tx1 = float(xo+1) / float(nx)
         ty0 = float(yo) / float(ny)
