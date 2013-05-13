@@ -131,15 +131,13 @@ class GeometricPrimitive(Primitive):
     
     def get_bsdf(self, dg, object_to_world):
         """Compute the BSDF."""
-        dgs = self.shape.get_shading_geometry(self.object_to_world,
-                                              self.dg)
-        return self.material.get_bsdf(self.dg, dgs)
+        dgs = self.shape.get_shading_geometry(object_to_world, dg)
+        return self.material.get_bsdf(dg, dgs)
 
     def get_bssrdf(self, dg, object_to_world):
         """Compute the BSSRDF."""
-        dgs = self.shape.get_shading_geometry(self.object_to_world,
-                                              self.dg)
-        return self.material.get_bssrdf(self.dg, dgs)
+        dgs = self.shape.get_shading_geometry(object_to_world, dg)
+        return self.material.get_bssrdf(dg, dgs)
 
     def __str__(self):
         """Return a string describing the geometric primitive."""
