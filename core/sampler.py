@@ -62,7 +62,7 @@ class Sampler(object):
 
         # compute x and y pixel sample range for sub-window
         xo = num % nx
-        yo = num % ny
+        yo = num / nx
         tx0 = float(xo) / float(nx)
         tx1 = float(xo+1) / float(nx)
         ty0 = float(yo) / float(ny)
@@ -72,7 +72,7 @@ class Sampler(object):
         x_end   = int(lerp(tx1, self.x_pixel_start, self.x_pixel_end))
         y_start = int(lerp(ty0, self.y_pixel_start, self.y_pixel_end))
         y_end   = int(lerp(ty1, self.y_pixel_start, self.y_pixel_end))
-        
+
         return x_start, x_end, y_start, y_end
 
 
