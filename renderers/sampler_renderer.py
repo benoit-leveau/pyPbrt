@@ -157,7 +157,7 @@ class SamplerRendererTask(Task):
                 
                 # evaluate radiance along camera ray
                 if ray_weight > 0.0:
-                    radiance, Ts_i, intersection = \
+                    radiance, intersection, Ts_i = \
                               self.renderer.Li(self.scene,
                                                ray_diff,
                                                samples[i],
