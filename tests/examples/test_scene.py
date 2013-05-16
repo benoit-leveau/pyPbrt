@@ -3,7 +3,7 @@
 import sys
 
 from core.geometry import Point, Vector
-from core.transform import translate, look_at, Transform
+from core.transform import translate, look_at, Transform, rotate
 from core.primitive import GeometricPrimitive
 from core.scene import Scene
 from core.integrator import Integrator
