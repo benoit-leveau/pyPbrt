@@ -28,7 +28,6 @@ class PerspectiveCamera(ProjectiveCamera):
         """Generate a Ray from the camera."""
         # Generate raster and camera samples
         p_ras = Point(sample.image_x, sample.image_y, 0)
-        p_camera = Point()
         p_camera = self.raster_to_camera(p_ras)
         ray = Ray(Point(0, 0, 0),
                   normalize(Vector.from_point(p_camera)),

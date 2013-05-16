@@ -42,7 +42,7 @@ def create_pyramid(primitives):
 
 def create_simple_sphere(primitives):
     material = None
-    object_to_world = rotate(60,Vector(1,1,1)) * translate(Point(0,1,0))
+    object_to_world = translate(Point(0,1,0))
     world_to_object = object_to_world.inverse()
     sphere = Sphere(object_to_world, world_to_object, False,
                     1.0, -1.0, 1.0, 360)
@@ -107,7 +107,8 @@ def create_camera(film):
                                fov, film)
 
     return camera
-    
+
+
 def create_renderer(camera):
     """Create a renderer."""
     # surface integrator

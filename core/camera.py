@@ -4,7 +4,7 @@ from abc import ABCMeta, abstractmethod
 
 from logger import logger
 from core.transform import translate, scale, inverse
-from core.geometry import Vector, RayDifferential
+from core.geometry import Point, RayDifferential
 from core.sampler import CameraSample
 
 
