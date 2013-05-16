@@ -21,4 +21,4 @@ class LightSample(object):
         ret = cls()
         ret.u_pos[0] = rng.random_float()
         ret.u_pos[1] = rng.random_float()
-        ret.u_component = rnd.random_float()
+        ret.u_component = rng.random_float()

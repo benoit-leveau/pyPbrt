@@ -4,7 +4,8 @@ from abc import ABCMeta, abstractmethod
 
 from logger import logger
 from core.transform import translate, scale, inverse
-from core.geometry import Vector
+from core.geometry import Vector, RayDifferential
+from core.sampler import CameraSample
 
 
 class Camera(object):
@@ -40,14 +41,14 @@ class Camera(object):
         
         # find ray after shifting one pixel in the x direction
         sshift = CameraSample.from_sample(sample)
-        sshit.image_x += 1
+        sshift.image_x += 1
         weight_x, ray_x = self.generate_ray(sshift)
         ray_diff.rx_origin = ray_x.o
         ray_diff.rx_direction = ray_x.d
         
         # find ray after shifting one pixel in the y direction
-        sshit.image_x -= 1
-        sshit.image_y += 1
+        sshift.image_x -= 1
+        sshift.image_y += 1
         weight_y, ray_y = self.generate_ray(sshift)
         ray_diff.ry_origin = ray_y.o
         ray_diff.ry_direction = ray_y.d

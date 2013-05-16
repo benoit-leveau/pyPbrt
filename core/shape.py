@@ -3,7 +3,8 @@
 from abc import ABCMeta, abstractmethod
 
 from core.transform import Transform
-from core.geometry import abs_dot, distance_squared
+from core.geometry import Ray, abs_dot, distance_squared
+from core.diffgeom import DifferentialGeometry
 
 
 class Shape(object):
@@ -85,10 +86,10 @@ class Shape(object):
 
     def pdf_wi(self, p, wi):
         """Intersect sample ray with area light geometry."""
-        dg_light = DifferentialGeoemtry()
+        dg_light = DifferentialGeometry()
         ray = Ray(p, wi, 1e-3)
         ray.depth = -1 # temp hack to ignore alpha mask
-        intersect, t_hit, ray_epsilon, dg_light - self.intersect(ray)
+        intersect, t_hit, ray_epsilon, dg_light = self.intersect(ray)
         if not intersect:
             return 0.0
         # convert light sample weight to solid angle measure

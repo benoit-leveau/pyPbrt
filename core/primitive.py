@@ -3,7 +3,8 @@
 from abc import ABCMeta, abstractmethod
 from logger import logger
 
-from core.transform import inverse, normalize
+from core.transform import Transform, inverse, normalize
+from core.intersection import Intersection
 
 
 class Primitive(object):

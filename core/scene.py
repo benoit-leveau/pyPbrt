@@ -37,9 +37,9 @@ class Scene(object):
         Search for intersection is stopped as soon as one is found.
 
         """
-        hit = aggregate.intersect_p(ray)
+        hit = self.aggregate.intersect_p(ray)
         return hit
 
     def world_bound(self):
         """Return the world bounding box of the scene."""
-        return bound
+        return self.bound
