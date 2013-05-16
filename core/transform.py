@@ -467,10 +467,10 @@ class AnimatedTransform(object):
         """
         
         if len(args) == 1:
-            if isinstance(args[0], Ray):
-                return self.__call_ray(args[0])
-            elif isinstance(args[0], RayDifferential):
+            if isinstance(args[0], RayDifferential):
                 return self.__call_raydiff(args[0])
+            elif isinstance(args[0], Ray):
+                return self.__call_ray(args[0])
         elif len(args) == 2:
             if isinstance(args[0], float) and isinstance(args[1], Point):
                 return self.__call_float_point(args[0], args[1])
