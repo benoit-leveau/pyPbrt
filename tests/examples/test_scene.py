@@ -98,8 +98,6 @@ def create_camera(film):
     focal_distance = 10.0
     fov = 22.0
 
-    t = cam_transform.inverse()
-
     camera = PerspectiveCamera(cam2world,
                                screen_window,
                                s_open, s_close,
