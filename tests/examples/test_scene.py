@@ -59,7 +59,7 @@ def create_scene():
     # create_pyramid(primitives)
         
     # create the accelerator
-    grid = GridAccel(primitives, False)
+    aggregate = GridAccel(primitives, False)
 
     # create the lights
     lights = []
@@ -67,7 +67,7 @@ def create_scene():
     # lights.append(light)
 
     # create the scene
-    scene = Scene(grid, lights, volume_region=None)
+    scene = Scene(aggregate, lights, volume_region=None)
 
     return scene
 
