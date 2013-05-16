@@ -60,7 +60,7 @@ class PerspectiveCamera(ProjectiveCamera):
         """Generate a RayDifferential from the camera."""
         # Generate raster and camera samples
         p_ras = Point(sample.image_x, sample.image_y, 0)
-        p_camera = Point()
+
         p_camera = self.raster_to_camera(p_ras)
         ray = RayDifferential(Point(0, 0, 0),
                               normalize(Vector.from_point(p_camera)),
@@ -83,8 +83,8 @@ class PerspectiveCamera(ProjectiveCamera):
             ray.o = Point(lens_u, lens_v, 0.0)
             ray.d = normalize(p_focus - ray.o)
 
-        ray.rx_origin = ray.o
-        ray.ry_origin = ray.o
+        ray.rx_origin = Point.from_point(ray.o)
+        ray.ry_origin = Point.from_point(ray.o)
         ray.rx_direction = normalize(Vector.from_point(p_camera) + \
                                      self.dx_camera)
         ray.ry_direction = normalize(Vector.from_point(p_camera) + \
@@ -92,4 +92,5 @@ class PerspectiveCamera(ProjectiveCamera):
         ray.time = sample.time
         ray = self.camera_to_world(ray)
         ray.has_differentials = True
+
         return 1.0, ray
