@@ -74,7 +74,7 @@ def create_scene():
 
 def create_film(filename, width, height):
     image_filter = BoxFilter(1.0, 1.0)
-    crop = [0,width-1,0,height-1]
+    crop = [0.0, 1.0, 0.0, 1.0]
     open_window = False
     film = ImageFilm(width, height, image_filter, crop, filename, open_window)
     return film
