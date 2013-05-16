@@ -119,7 +119,7 @@ def create_renderer(camera):
     # sampler
     sampler = RandomSampler(0, camera.film.x_resolution-1,
                             0, camera.film.y_resolution-1,
-                            1,
+                            16,
                             0.0, 0.5
                             )
 
