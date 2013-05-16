@@ -82,21 +82,30 @@ def create_film(filename, width, height):
 
 def create_camera(film):
     """Create a perspective camera."""
-    cam_pos = Point(10, 10, 0)
-    cam_look = Point(0, 0, 0)
-    cam_up = Vector(0, 0, 1) 
-    cam_to_world = look_at(cam_pos, cam_look, cam_up)
-    screen_window = [0, film.x_resolution-1, 0, film.y_resolution-1]
+    cam_pos = Point(0, 3, 8)
+    cam_look = Point(0, 0.8, 0)
+    cam_up = Vector(0, 1, 0)
+    cam_transform = look_at(cam_pos, cam_look, cam_up)
+    cam2world = cam_transform.inverse()
+    frame = float(film.x_resolution) / float(film.y_resolution)
+    if frame > 1.0:
+        screen_window = [-frame, frame, -1.0, 1.0]
+    else:
+        screen_window = [-1.0, 1.0, -1.0/frame, 1.0/frame]
     s_open = 0.0
     s_close = 0.5
-    lens_radius = 0.01
-    focal_distance = 0.1
-    fov = 40.0
-    camera = PerspectiveCamera(cam_to_world,
+    lens_radius = 0.0
+    focal_distance = 10.0
+    fov = 22.0
+
+    t = cam_transform.inverse()
+
+    camera = PerspectiveCamera(cam2world,
                                screen_window,
                                s_open, s_close,
                                lens_radius, focal_distance,
                                fov, film)
+
     return camera
     
 def create_renderer(camera):
