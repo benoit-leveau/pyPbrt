@@ -111,7 +111,7 @@ class GeometricPrimitive(Primitive):
         """Compute an intersection."""
         intersected, t_hit, ray_epsilon, dg = self.shape.intersect(ray)
         if not intersected:
-            return False, float('inf'), 0.0, None
+            return False
         intersection.primitive = self
         intersection.world_to_object = self.shape.world_to_object
         intersection.object_to_world = self.shape.object_to_world
