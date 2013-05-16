@@ -82,7 +82,7 @@ class ProjectiveCamera(Camera):
         sc2 = scale(1.0 / (screen_window[1] - screen_window[0]),
                     1.0 / (screen_window[2] - screen_window[3]),
                     1.0)
-        tr = translate(Vector(-screen_window[0], -screen_window[3], 0.0))
+        tr = translate(Point(-screen_window[0], -screen_window[3], 0.0))
         self.screen_to_raster = sc1 * sc2 * tr
         self.raster_to_screen = inverse(self.screen_to_raster)
         self.raster_to_camera = inverse(self.camera_to_screen) * \
