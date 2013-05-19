@@ -119,6 +119,7 @@ class GeometricPrimitive(Primitive):
         intersection.shape_id = self.shape.shape_id
         intersection.primitive_id = self.primitive_id
         intersection.ray_epsilon = ray_epsilon
+        intersection.dg = dg
         ray.maxt = t_hit
         return True
 
@@ -175,14 +176,15 @@ class TransformedPrimitive(Primitive):
             intersection.world_to_object = intersection.world_to_object * w2p
             intersection.object_to_world = inverse(intersection.world_to_object)
 
-            # Transform instance's differential geometry to world space
             p2w = inverse(w2p)
+
+            # Transform instance's differential geometry to world space
             intersection.dg.p = p2w(intersection.dg.p)
             intersection.dg.nn = normalize(p2w(intersection.dg.nn))
-            intersection.dg.dpdu = p2w(intersection.dg.dpdu)
-            intersection.dg.dpdv = p2w(intersection.dg.dpdv)
-            intersection.dg.dndu = p2w(intersection.dg.dndu)
-            intersection.dg.dndv = p2w(intersection.dg.dndv)
+            intersection.dg.dpdu = p2w(intersection.dg.dp_du)
+            intersection.dg.dpdv = p2w(intersection.dg.dp_dv)
+            intersection.dg.dndu = p2w(intersection.dg.dn_du)
+            intersection.dg.dndv = p2w(intersection.dg.dn_dv)
         return True
 
     def intersect_p(self, ray):
