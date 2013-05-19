@@ -406,7 +406,14 @@ class AnimatedTransform(object):
         self.end_transform = Transform.from_transform(transform2)
         self.t_0, self.r_o, self.s_o = decompose(self.start_transform.m)
         self.t_1, self.r_1, self.s_1 = decompose(self.end_transform.m)
+        self.actually_animated = transform1 != transform2
 
+    @classmethod
+    def from_animatedtransform(cls, transform):
+        """Copy constructor."""
+        return cls(transform.start_transform, transform.start_time,
+                   transform.end_transform, transform.end_time)
+    
     def interpolate(self, time):
         """."""
         # Handle boundary conditions for matrix interpolation
@@ -436,7 +443,7 @@ class AnimatedTransform(object):
     def motion_bounds(self, bbox, use_inverse):
         """."""
         if (not self.actually_animated):
-            return inverse(self.startTransform)(bbox)
+            return inverse(self.start_transform)(bbox)
         ret = BBox()
         n_steps = 128
         for i in range(n_steps):

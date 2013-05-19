@@ -3,7 +3,7 @@
 from abc import ABCMeta, abstractmethod
 from logger import logger
 
-from core.transform import Transform, inverse, normalize
+from core.transform import Transform, AnimatedTransform, inverse, normalize
 from core.intersection import Intersection
 
 
@@ -154,7 +154,7 @@ class TransformedPrimitive(Primitive):
         """Default constructor for TransformedPrimitive."""
         super(TransformedPrimitive, self).__init__()
         self.primitive = primitive
-        self.world_to_primitive = Transform.from_transform(world_to_primitive)
+        self.world_to_primitive = AnimatedTransform.from_animatedtransform(world_to_primitive)
 
     def world_bound(self):
         """Return the bounding box of the primitive, in world space."""
@@ -166,9 +166,7 @@ class TransformedPrimitive(Primitive):
         w2p = self.world_to_primitive.interpolate(ray.time)
         ray_primitive = w2p(ray)
         intersection = Intersection()
-        found_intersect, ray_hit, ray_epsilon, dg = self.primitive.intersect(
-            ray_primitive, intersection)
-        if not found_intersect:
+        if not self.primitive.intersect(ray_primitive, intersection):
             return False
         ray.maxt = ray_primitive.maxt
         intersection.primitive_id = self.primitive_id

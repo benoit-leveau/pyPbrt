@@ -58,7 +58,7 @@ class SamplerRenderer(Renderer):
         # self.wait_for_all_tasks()
         for task in render_tasks:
             task.run()
-        
+
         # clean up after rendering and store final image
         del(self.sample)
         self.camera.film.write_image()
@@ -131,9 +131,9 @@ class SamplerRendererTask(Task):
         # allocate space for samples and intersections
         max_samples = sampler.maximum_sample_count()
         samples = self.orig_sample.duplicate(max_samples)
-        rays = [] # RayDifferential[max_samples]
-        Ls = [] # Spectrum[max_samples]
-        Ts = [] # Spectrum[max_samples]
+        rays = [None] * max_samples
+        Ls = [None] * max_samples
+        Ts = [None] * max_samples
         isects = [] # Intersection[max_samples]
         for i in range(max_samples):
             isects.append(Intersection())
@@ -151,7 +151,7 @@ class SamplerRendererTask(Task):
                 # find camera ray for samples[i]
                 ray_weight, ray_diff = self.camera.generate_ray_differential(samples[i])
                 
-                rays.append(ray_diff)
+                rays[i] = ray_diff
                 coeff = 1.0 / math.sqrt(sampler.samples_per_pixel)
                 ray_diff.scale_differentials(coeff)
                 
@@ -165,10 +165,11 @@ class SamplerRendererTask(Task):
                                                isects[i])
                     Ls_i = ray_weight * radiance
                 else:
-                    Ls_i = 0.0
-                    Ts_i = 1.0
+                    Ls_i = Spectrum(0.0)
+                    Ts_i = Spectrum(1.0)
 
-                Ls.append(Ls_i)
+                Ls[i] = Ls_i
+                Ts[i] = Ts_i
                 
                 # check for unexpected radiance values
                 if Ls_i.has_nan():

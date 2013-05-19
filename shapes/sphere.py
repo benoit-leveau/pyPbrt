@@ -50,7 +50,7 @@ class Sphere(Shape):
 
         # Compute intersection distance along ray
         if (t0 > ray.maxt or t1 < ray.mint):
-            return False, 0.0, 0.0, None
+            return False, float('inf'), 0.0, None
         t_hit = t0
         if (t0 < ray.mint):
             t_hit = t1

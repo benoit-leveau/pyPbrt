@@ -99,6 +99,10 @@ class RGBSpectrum(CoefficientSpectrum):
     def to_xyz(self):
         """Convert to XYZ."""
         return rgb_to_xyz(self.c[0], self.c[1], self.c[2])
+
+    def to_rgb(self):
+        """Convert to RGB."""
+        return self.c[0], self.c[1], self.c[2]
     
     def __str__(self):
         """Return a string describing the rgb color."""
