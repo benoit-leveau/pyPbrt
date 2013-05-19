@@ -3,8 +3,8 @@
 import sys
 
 from core.geometry import Point, Vector
-from core.transform import translate, look_at, Transform, rotate
-from core.primitive import GeometricPrimitive
+from core.transform import translate, look_at, Transform, rotate, AnimatedTransform
+from core.primitive import GeometricPrimitive, TransformedPrimitive
 from core.scene import Scene
 from core.integrator import Integrator
 from shapes.sphere import Sphere
@@ -24,20 +24,19 @@ def create_pyramid(primitives):
     #     O O    level 2, width 2, pos_x -2
     #      O     level 3, width 1, pos_x 0
     material = None
-    if False:
-        for level in range(4):
-            width_array = 4 - level
-            start_pos = Point(-2.0*(3-level), -2.0*(3-level), level*2.0)
-            for i in range(width_array):
-                start_pos_i = start_pos + i * Vector(2.0, 0.0, 0.0)
-                for j in range(width_array):
-                    pos = start_pos_i + j * Vector(0.0, 2.0, 0.0)
-                    object_to_world = translate(pos)
-                    world_to_object = object_to_world.inverse()
-                    sphere = Sphere(object_to_world, world_to_object,
-                                    False, 1.0, -1.0, 1.0, 360)
-                    primitive = GeometricPrimitive(sphere, material, None)
-                    primitives.append(primitive)
+    for level in range(4):
+        width_array = 4 - level
+        start_pos = Point(-2.0*(3-level), -2.0*(3-level), level*2.0)
+        for i in range(width_array):
+            start_pos_i = start_pos + i * Vector(2.0, 0.0, 0.0)
+            for j in range(width_array):
+                pos = start_pos_i + j * Vector(0.0, 2.0, 0.0)
+                object_to_world = translate(pos)
+                world_to_object = object_to_world.inverse()
+                sphere = Sphere(object_to_world, world_to_object,
+                                False, 1.0, -1.0, 1.0, 360)
+                primitive = GeometricPrimitive(sphere, material, None)
+                primitives.append(primitive)
 
 
 def create_simple_sphere(primitives):
@@ -50,6 +49,19 @@ def create_simple_sphere(primitives):
     primitives.append(primitive)
 
     
+def create_simple_sphere2(primitives):
+    material = None
+    object_to_world = Transform()
+    world_to_object = Transform()
+    sphere = Sphere(object_to_world, world_to_object, False,
+                    1.0, -1.0, 1.0, 360)
+    primitive = GeometricPrimitive(sphere, material, None)
+    transform = translate(Point(0,1,0))
+    world_to_primitive = AnimatedTransform(transform, 0.0, transform, 1.0)
+    transformed_primitive = TransformedPrimitive(primitive, world_to_primitive)
+    primitives.append(transformed_primitive)
+
+
 def create_scene():
     """Create a default scene."""
 
@@ -59,7 +71,8 @@ def create_scene():
     # create_pyramid(primitives)
         
     # create the accelerator
-    aggregate = GridAccel(primitives, False)
+    # aggregate = GridAccel(primitives, False)
+    aggregate = primitives[0]
 
     # create the lights
     lights = []
@@ -73,7 +86,7 @@ def create_scene():
 
 
 def create_film(filename, width, height):
-    image_filter = BoxFilter(1.0, 1.0)
+    image_filter = BoxFilter(0.5, 0.5)
     crop = [0.0, 1.0, 0.0, 1.0]
     open_window = False
     film = ImageFilm(width, height, image_filter, crop, filename, open_window)
