@@ -126,9 +126,9 @@ class GridAccel(Aggregate):
                 v_max.append(self._pos_to_voxel(primitive_bound.p_max, axis))
 
             # add primitive to overlapping voxels
-            for z in range(v_min[2], v_max[2]):
-                for y in range(v_min[1], v_max[1]):
-                    for x in range(v_min[0], v_max[0]):
+            for z in range(v_min[2], v_max[2]+1):
+                for y in range(v_min[1], v_max[1]+1):
+                    for x in range(v_min[0], v_max[0]+1):
                         index = self._offset(x, y, z)
                         if self.voxels[index] is None:
                             self.voxels[index] = Voxel(primitive)
